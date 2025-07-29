@@ -5,7 +5,7 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('Login');
-    }, 2500); // Delay for splash effect
+    }, 1000); // Delay for splash effect
 
     return () => clearTimeout(timer);
   }, []);
