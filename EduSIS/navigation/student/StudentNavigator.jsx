@@ -4,7 +4,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 // Screens (content only; no headers inside them)
 import StudentDashboard from "../../components/StudentDashboard";
 import Assignments from "../../components/student/Assignments";
-import Classes from "../../components/student/Classes";
+import Classes from "../../components/student/Messages";
 import Results from "../../components/student/Results";
 import Calendar from "../../components/student/Calendar";
 import Profile from "../../components/student/Profile";
