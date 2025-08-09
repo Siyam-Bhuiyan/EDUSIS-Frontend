@@ -1,8 +1,8 @@
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet } from "react-native";
-import CourseCard from "./student/CourseCard";
-import { useTheme } from "../theme/ThemeProvider";
+import CourseCard from "./CourseCard";
+import { useTheme } from "../../theme/ThemeProvider";
 
 export default function StudentDashboard() {
   const { colors } = useTheme();

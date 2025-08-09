@@ -1,27 +1,45 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useTheme } from '../../theme/ThemeProvider';
 
 // Screens
-import TeacherDashboard from '../../components/TeacherDashboard';
+import TeacherDashboard from '../../components/teacher/TeacherDashboard';
+import Announcements from '../../components/teacher/Announcements';
+import OnlineClasses from '../../components/teacher/OnlineClasses';
+import Assignments from '../../components/teacher/Assignments';
+import Calendar from '../../components/teacher/Calendar';
+import Profile from '../../components/teacher/Profile';
 
-// Shared beautiful sidebar
+// Shared UI
 import Sidebar from '../../components/Sidebar';
+import AppShell from '../../components/layout/AppShell';
 
 const Drawer = createDrawerNavigator();
 
+
+/** Helper to wrap any screen with the global AppShell */
+const withShell = (Component, shellProps) => (props) =>
+  (
+    <AppShell {...shellProps}>
+      <Component {...props} />
+    </AppShell>
+  );
+
 export default function TeacherNavigator() {
+  const { colors, isDark } = useTheme();
+  
   // Sidebar "Quick Actions" for teachers
   const quickActions = [
-    { id: 1, title: 'Announcements', icon: 'campaign', screen: 'TeacherDashboard' },
-    { id: 2, title: 'Online Classes', icon: 'videocam', screen: 'TeacherDashboard' },
-    { id: 3, title: 'Files & Assignments', icon: 'upload-file', screen: 'TeacherDashboard' },
-    { id: 4, title: 'Grading', icon: 'grading', screen: 'TeacherDashboard' },
-    { id: 5, title: 'Calendar', icon: 'event', screen: 'TeacherDashboard' },
+    { id: 1, title: 'Announcements', icon: 'campaign', screen: 'Announcements' },
+    { id: 2, title: 'Online Classes', icon: 'videocam', screen: 'OnlineClasses' },
+    { id: 3, title: 'Assignments', icon: 'assignment', screen: 'Assignments' },
+    { id: 4, title: 'Calendar', icon: 'event', screen: 'Calendar' },
   ];
 
   const footerActions = [
-    { id: 'settings', title: 'Settings', icon: 'settings', screen: 'TeacherDashboard' },
-    { id: 'help', title: 'Help & Support', icon: 'help-outline', screen: 'TeacherDashboard' },
+    { id: 'settings', title: 'Settings', icon: 'settings', screen: 'Settings' },
+    { id: 'help', title: 'Help & Support', icon: 'help-outline', screen: 'Help' },
   ];
 
   const user = { name: 'Dr. Smith', sub: 'Faculty — CSE' };
@@ -33,6 +51,8 @@ export default function TeacherNavigator() {
         drawerType: 'slide',
         drawerStyle: { width: 280 },
         overlayColor: 'rgba(0,0,0,0.25)',
+        swipeEdgeWidth: 80,
+        gestureEnabled: true
       }}
       drawerContent={(props) => (
         <Sidebar
@@ -44,8 +64,74 @@ export default function TeacherNavigator() {
         />
       )}
     >
-      <Drawer.Screen name="TeacherDashboard" component={TeacherDashboard} />
-      {/* Later: add Announcements, Classes, Grading, Calendar screens */}
+      <Drawer.Screen 
+        name="TeacherDashboard" 
+        component={withShell(TeacherDashboard, {
+          title: "Teacher Dashboard",
+          subtitle: "Manage Your Courses"
+        })}
+      />
+
+      <Drawer.Screen 
+        name="Announcements" 
+        component={withShell(Announcements, {
+          title: "Announcements",
+          subtitle: "Class Updates"
+        })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="announcement" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen 
+        name="OnlineClasses" 
+        component={withShell(OnlineClasses, {
+          title: "Online Classes",
+          subtitle: "Virtual Classroom"
+        })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="video-camera-front" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen 
+        name="Assignments" 
+        component={withShell(Assignments, {
+          title: "Assignments",
+          subtitle: "Tasks & Submissions"
+        })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="assignment" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen 
+        name="Calendar" 
+        component={withShell(Calendar, {
+          title: "Calendar",
+          subtitle: "Schedule & Events"
+        })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="event" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen 
+        name="Profile" 
+        component={withShell(Profile, {
+          title: "Profile",
+          subtitle: "Personal Information"
+        })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="person" size={size} color={color} />
+          ),
+        }}
+      />
     </Drawer.Navigator>
   );
 }

@@ -1,6 +1,3 @@
-// keep your existing navigator
-
-
 // App.js (root)
 import React from "react";
 import {

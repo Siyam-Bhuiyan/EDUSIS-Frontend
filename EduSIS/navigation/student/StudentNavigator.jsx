@@ -2,7 +2,7 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 // Screens (content only; no headers inside them)
-import StudentDashboard from "../../components/StudentDashboard";
+import StudentDashboard from "../../components/student/StudentDashboard";
 import Assignments from "../../components/student/Assignments";
 import Messages from "../../components/student/Messages";
 import Results from "../../components/student/Results";

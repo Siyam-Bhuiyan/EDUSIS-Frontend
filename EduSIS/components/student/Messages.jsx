@@ -52,9 +52,21 @@ export default function Messages() {
   // ---- Dummy data bootstrapping ----
   useEffect(() => {
     const dummyCourses = [
-      { course_id: "CSE-4801", title: "Computer Networks", teacher_id: "T-1001" },
-      { course_id: "CSE-4703", title: "Database Systems", teacher_id: "T-1002" },
-      { course_id: "CSE-4203", title: "Software Engineering", teacher_id: "T-1003" },
+      {
+        course_id: "CSE-4801",
+        title: "Computer Networks",
+        teacher_id: "T-1001",
+      },
+      {
+        course_id: "CSE-4703",
+        title: "Database Systems",
+        teacher_id: "T-1002",
+      },
+      {
+        course_id: "CSE-4203",
+        title: "Software Engineering",
+        teacher_id: "T-1003",
+      },
     ];
     setCourses(dummyCourses);
     setSelectedCourseId(dummyCourses[0].course_id);
@@ -133,13 +145,18 @@ export default function Messages() {
 
     setMessageStore((prev) => {
       const cid = selectedCourse.course_id;
-      const byCourse = prev[cid] ?? { [CHANNELS.TEACHER]: [], [CHANNELS.GROUP]: [] };
+      const byCourse = prev[cid] ?? {
+        [CHANNELS.TEACHER]: [],
+        [CHANNELS.GROUP]: [],
+      };
       const updated = [...(byCourse[channel] ?? []), newMsg];
       return { ...prev, [cid]: { ...byCourse, [channel]: updated } };
     });
     setDraft("");
 
-    requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: true }));
+    requestAnimationFrame(() =>
+      listRef.current?.scrollToEnd({ animated: true })
+    );
   };
 
   const isMine = (m) => m.sender_id === studentId;
@@ -155,17 +172,46 @@ export default function Messages() {
 
     const mine = isMine(item);
     return (
-      <View style={[styles.row, mine ? { justifyContent: "flex-end" } : { justifyContent: "flex-start" }]}>
-        <View style={[styles.bubble, mine ? styles.sent : styles.received, { maxWidth: Math.min(0.84 * width, 420) }]}>
+      <View
+        style={[
+          styles.row,
+          mine
+            ? { justifyContent: "flex-end" }
+            : { justifyContent: "flex-start" },
+        ]}
+      >
+        <View
+          style={[
+            styles.bubble,
+            mine ? styles.sent : styles.received,
+            { maxWidth: Math.min(0.84 * width, 420) },
+          ]}
+        >
           <View style={styles.metaRow}>
-            <Text style={[styles.sender, mine ? styles.senderMine : styles.senderOther]}>
-              {mine ? "You" : item.sender_role === "teacher" ? "Teacher" : `Student ${item.sender_id}`}
+            <Text
+              style={[
+                styles.sender,
+                mine ? styles.senderMine : styles.senderOther,
+              ]}
+            >
+              {mine
+                ? "You"
+                : item.sender_role === "teacher"
+                ? "Teacher"
+                : `Student ${item.sender_id}`}
             </Text>
-            <Text style={[styles.time, mine ? styles.timeMine : styles.timeOther]}>
-              {new Date(item.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            <Text
+              style={[styles.time, mine ? styles.timeMine : styles.timeOther]}
+            >
+              {new Date(item.timestamp).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </Text>
           </View>
-          <Text style={[styles.content, !mine && styles.contentOther]}>{item.content}</Text>
+          <Text style={[styles.content, !mine && styles.contentOther]}>
+            {item.content}
+          </Text>
         </View>
       </View>
     );
@@ -178,15 +224,25 @@ export default function Messages() {
       keyboardVerticalOffset={insets.top + 92}
     >
       {/* Top controls */}
-      <View style={[styles.topBar, { 
-        backgroundColor: colors.cardBg,
-        borderBottomColor: colors.border 
-      }]}>
+      <View
+        style={[
+          styles.topBar,
+          {
+            backgroundColor: colors.cardBg,
+            borderBottomColor: colors.border,
+          },
+        ]}
+      >
         <View style={styles.dropWrap}>
-          <View style={[styles.pickerBox, { 
-            borderColor: colors.border,
-            backgroundColor: colors.inputBg 
-          }]}>
+          <View
+            style={[
+              styles.pickerBox,
+              {
+                borderColor: colors.border,
+                backgroundColor: colors.inputBg,
+              },
+            ]}
+          >
             <Picker
               selectedValue={selectedCourseId}
               onValueChange={(v) => setSelectedCourseId(v)}
@@ -194,7 +250,11 @@ export default function Messages() {
               style={[styles.picker, { color: colors.text }]}
             >
               {courses.map((c) => (
-                <Picker.Item key={c.course_id} label={`${c.course_id}`} value={c.course_id} />
+                <Picker.Item
+                  key={c.course_id}
+                  label={`${c.course_id}`}
+                  value={c.course_id}
+                />
               ))}
             </Picker>
           </View>
@@ -224,29 +284,50 @@ export default function Messages() {
             keyExtractor={(it) => it.id || `${it.timestamp}`}
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={{ paddingVertical: 8, paddingBottom: 96 }}
-            onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: true })}
+            onContentSizeChange={() =>
+              listRef.current?.scrollToEnd({ animated: true })
+            }
             renderItem={renderItem}
           />
         ) : (
           <View style={styles.placeholder}>
             <MaterialIcons name="chat" size={64} color="#a3b1c2" />
-            <Text style={styles.placeholderTitle}>Select a course to start</Text>
-            <Text style={styles.placeholderSub}>Then choose Teacher or Group to chat.</Text>
+            <Text style={styles.placeholderTitle}>
+              Select a course to start
+            </Text>
+            <Text style={styles.placeholderSub}>
+              Then choose Teacher or Group to chat.
+            </Text>
           </View>
         )}
       </View>
 
       {/* Composer */}
-      <View style={[styles.inputRow, { backgroundColor: colors.bg, paddingBottom: Math.max(insets.bottom, 10) }]}>
+      <View
+        style={[
+          styles.inputRow,
+          {
+            backgroundColor: colors.bg,
+            paddingBottom: Math.max(insets.bottom, 10),
+          },
+        ]}
+      >
         <TextInput
-          style={[styles.input, { 
-            backgroundColor: colors.inputBg,
-            borderColor: colors.border,
-            color: colors.text
-          }]}
+          style={[
+            styles.input,
+            {
+              backgroundColor: colors.inputBg,
+              borderColor: colors.border,
+              color: colors.text,
+            },
+          ]}
           value={draft}
           onChangeText={setDraft}
-          placeholder={channel === CHANNELS.TEACHER ? "Message your teacher…" : "Message the group…"}
+          placeholder={
+            channel === CHANNELS.TEACHER
+              ? "Message your teacher…"
+              : "Message the group…"
+          }
           returnKeyType="send"
           onSubmitEditing={sendMessage}
           multiline
@@ -254,7 +335,13 @@ export default function Messages() {
           placeholderTextColor={colors.textDim}
         />
         <TouchableOpacity
-          style={[styles.sendBtn, { backgroundColor: colors.primary, opacity: !draft.trim() ? 0.5 : 1 }]}
+          style={[
+            styles.sendBtn,
+            {
+              backgroundColor: colors.primary,
+              opacity: !draft.trim() ? 0.5 : 1,
+            },
+          ]}
           onPress={sendMessage}
           disabled={!draft.trim()}
           activeOpacity={0.9}
@@ -285,7 +372,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
   },
   dropWrap: { flex: 1 },
-  dropLabel: { fontSize: 12, color: "#6b7c93", marginBottom: 1, fontWeight: "700" },
+  dropLabel: {
+    fontSize: 12,
+    color: "#6b7c93",
+    marginBottom: 1,
+    fontWeight: "700",
+  },
   pickerBox: {
     height: 45,
     borderRadius: 10,
@@ -363,6 +455,16 @@ const styles = StyleSheet.create({
   },
 
   placeholder: { flex: 1, alignItems: "center", justifyContent: "center" },
-  placeholderTitle: { fontSize: 16, fontWeight: "800", color: "#2c3e50", marginTop: 8 },
-  placeholderSub: { fontSize: 13, color: "#7f8c8d", marginTop: 4, textAlign: "center" },
+  placeholderTitle: {
+    fontSize: 16,
+    fontWeight: "800",
+    color: "#2c3e50",
+    marginTop: 8,
+  },
+  placeholderSub: {
+    fontSize: 13,
+    color: "#7f8c8d",
+    marginTop: 4,
+    textAlign: "center",
+  },
 });

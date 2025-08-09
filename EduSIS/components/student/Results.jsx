@@ -194,11 +194,7 @@ export default function Results() {
           </View>
 
           <View
-            style={[
-              styles.card,
-              styles.totalCard,
-              { borderColor: borderClr },
-            ]}
+            style={[styles.card, styles.totalCard, { borderColor: borderClr }]}
           >
             <Text style={styles.cardTitle}>Total Marks & Grade</Text>
             <Text style={styles.rowText}>

@@ -8,17 +8,35 @@ import {
   Modal,
   TextInput,
   Alert,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "../../theme/ThemeProvider";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const initialEvents = [
-  { id: 1, title: "Networks Quiz", date: "2024-08-15", time: "10:00 AM", tag: "Quiz" },
-  { id: 2, title: "DB Project Submission", date: "2024-08-18", time: "11:59 PM", tag: "Deadline" },
-  { id: 3, title: "SE Midterm", date: "2024-08-27", time: "9:00 AM", tag: "Exam" },
+  {
+    id: 1,
+    title: "Networks Quiz",
+    date: "2024-08-15",
+    time: "10:00 AM",
+    tag: "Quiz",
+  },
+  {
+    id: 2,
+    title: "DB Project Submission",
+    date: "2024-08-18",
+    time: "11:59 PM",
+    tag: "Deadline",
+  },
+  {
+    id: 3,
+    title: "SE Midterm",
+    date: "2024-08-27",
+    time: "9:00 AM",
+    tag: "Exam",
+  },
 ];
 
 const tagStyle = (tag) => {
@@ -39,8 +57,18 @@ const tagStyle = (tag) => {
 };
 
 const months = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -52,11 +80,11 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [view, setView] = useState("calendar"); // "calendar" or "list"
-  
+
   const [formData, setFormData] = useState({
     title: "",
     time: "",
-    tag: "Assignment"
+    tag: "Assignment",
   });
 
   const year = currentDate.getFullYear();
@@ -75,12 +103,14 @@ export default function Calendar() {
   };
 
   const formatDate = (date) => {
-    return `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+    return `${year}-${String(month + 1).padStart(2, "0")}-${String(
+      date
+    ).padStart(2, "0")}`;
   };
 
   const getEventsForDate = (date) => {
     const dateStr = formatDate(date);
-    return events.filter(event => event.date === dateStr);
+    return events.filter((event) => event.date === dateStr);
   };
 
   const handleDateClick = (date) => {
@@ -99,7 +129,7 @@ export default function Calendar() {
       title: formData.title,
       date: formatDate(selectedDate),
       time: formData.time || "All Day",
-      tag: formData.tag
+      tag: formData.tag,
     };
 
     setEvents([...events, newEvent]);
@@ -109,29 +139,28 @@ export default function Calendar() {
   };
 
   const deleteEvent = (eventId) => {
-    Alert.alert(
-      "Delete Event",
-      "Are you sure you want to delete this event?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Delete", 
-          style: "destructive",
-          onPress: () => setEvents(events.filter(e => e.id !== eventId))
-        }
-      ]
-    );
+    Alert.alert("Delete Event", "Are you sure you want to delete this event?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => setEvents(events.filter((e) => e.id !== eventId)),
+      },
+    ]);
   };
 
   const renderCalendar = () => {
     const days = [];
     const cellWidth = (width - 32) / 7; // Account for padding
-    
+
     // Previous month's trailing days
     for (let i = firstDay - 1; i >= 0; i--) {
       const date = daysInPrevMonth - i;
       days.push(
-        <View key={`prev-${date}`} style={[styles.calendarDay, { width: cellWidth }]}>
+        <View
+          key={`prev-${date}`}
+          style={[styles.calendarDay, { width: cellWidth }]}
+        >
           <Text style={styles.prevMonthDate}>{date}</Text>
         </View>
       );
@@ -140,8 +169,10 @@ export default function Calendar() {
     // Current month days
     for (let date = 1; date <= daysInMonth; date++) {
       const dayEvents = getEventsForDate(date);
-      const isToday = new Date().toDateString() === new Date(year, month, date).toDateString();
-      
+      const isToday =
+        new Date().toDateString() ===
+        new Date(year, month, date).toDateString();
+
       days.push(
         <TouchableOpacity
           key={date}
@@ -149,14 +180,14 @@ export default function Calendar() {
           style={[
             styles.calendarDay,
             { width: cellWidth },
-            isToday && styles.today
+            isToday && styles.today,
           ]}
         >
           <Text style={[styles.dateText, isToday && styles.todayText]}>
             {date}
           </Text>
           <View style={styles.eventsContainer}>
-            {dayEvents.slice(0, 2).map(event => {
+            {dayEvents.slice(0, 2).map((event) => {
               const t = tagStyle(event.tag);
               return (
                 <View
@@ -178,7 +209,10 @@ export default function Calendar() {
     const remainingCells = totalCells - (firstDay + daysInMonth);
     for (let date = 1; date <= remainingCells; date++) {
       days.push(
-        <View key={`next-${date}`} style={[styles.calendarDay, { width: cellWidth }]}>
+        <View
+          key={`next-${date}`}
+          style={[styles.calendarDay, { width: cellWidth }]}
+        >
           <Text style={styles.prevMonthDate}>{date}</Text>
         </View>
       );
@@ -191,19 +225,24 @@ export default function Calendar() {
     const tags = ["Assignment", "Quiz", "Exam", "Deadline", "Meeting"];
     return (
       <View style={styles.tagPicker}>
-        {tags.map(tag => {
+        {tags.map((tag) => {
           const t = tagStyle(tag);
           const isSelected = formData.tag === tag;
           return (
             <TouchableOpacity
               key={tag}
-              onPress={() => setFormData({...formData, tag})}
+              onPress={() => setFormData({ ...formData, tag })}
               style={[
                 styles.tagOption,
-                { backgroundColor: isSelected ? t.fg : t.bg }
+                { backgroundColor: isSelected ? t.fg : t.bg },
               ]}
             >
-              <Text style={[styles.tagOptionText, { color: isSelected ? "#fff" : t.fg }]}>
+              <Text
+                style={[
+                  styles.tagOptionText,
+                  { color: isSelected ? "#fff" : t.fg },
+                ]}
+              >
                 {tag}
               </Text>
             </TouchableOpacity>
@@ -216,10 +255,15 @@ export default function Calendar() {
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
       {/* Header */}
-      <View style={[styles.header, { 
-        backgroundColor: colors.cardBg,
-        borderBottomColor: colors.border 
-      }]}>
+      <View
+        style={[
+          styles.header,
+          {
+            backgroundColor: colors.cardBg,
+            borderBottomColor: colors.border,
+          },
+        ]}
+      >
         <View style={styles.titleContainer}>
           <MaterialIcons name="event" size={24} color="#1e90ff" />
           <Text style={[styles.title, { color: colors.text }]}>Calendar</Text>
@@ -228,10 +272,10 @@ export default function Calendar() {
           onPress={() => setView(view === "calendar" ? "list" : "calendar")}
           style={styles.viewToggle}
         >
-          <MaterialIcons 
-            name={view === "calendar" ? "view-list" : "view-module"} 
-            size={20} 
-            color="#666" 
+          <MaterialIcons
+            name={view === "calendar" ? "view-list" : "view-module"}
+            size={20}
+            color="#666"
           />
           <Text style={styles.viewToggleText}>
             {view === "calendar" ? "List" : "Calendar"}
@@ -239,7 +283,10 @@ export default function Calendar() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 20 }}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      >
         {view === "calendar" ? (
           <>
             {/* Calendar Header */}
@@ -247,11 +294,11 @@ export default function Calendar() {
               <TouchableOpacity onPress={prevMonth} style={styles.navButton}>
                 <MaterialIcons name="chevron-left" size={24} color="#666" />
               </TouchableOpacity>
-              
+
               <Text style={styles.monthYear}>
                 {months[month]} {year}
               </Text>
-              
+
               <TouchableOpacity onPress={nextMonth} style={styles.navButton}>
                 <MaterialIcons name="chevron-right" size={24} color="#666" />
               </TouchableOpacity>
@@ -259,15 +306,20 @@ export default function Calendar() {
 
             {/* Weekday Headers */}
             <View style={styles.weekdayContainer}>
-              {weekdays.map(day => (
-                <View key={day} style={[styles.weekdayHeader, { width: (width - 32) / 7 }]}>
+              {weekdays.map((day) => (
+                <View
+                  key={day}
+                  style={[styles.weekdayHeader, { width: (width - 32) / 7 }]}
+                >
                   <Text style={styles.weekdayText}>{day}</Text>
                 </View>
               ))}
             </View>
 
             {/* Calendar Grid */}
-            <View style={[styles.calendarGrid, { backgroundColor: colors.cardBg }]}>
+            <View
+              style={[styles.calendarGrid, { backgroundColor: colors.cardBg }]}
+            >
               {renderCalendar()}
             </View>
           </>
@@ -278,17 +330,29 @@ export default function Calendar() {
             {events
               .sort((a, b) => new Date(a.date) - new Date(b.date))
               .map((event) => {
-                const [mon, day] = event.date.split("-")[1] === "08" 
-                  ? ["AUG", event.date.split("-")[2]]
-                  : [months[parseInt(event.date.split("-")[1]) - 1].slice(0, 3).toUpperCase(), event.date.split("-")[2]];
+                const [mon, day] =
+                  event.date.split("-")[1] === "08"
+                    ? ["AUG", event.date.split("-")[2]]
+                    : [
+                        months[parseInt(event.date.split("-")[1]) - 1]
+                          .slice(0, 3)
+                          .toUpperCase(),
+                        event.date.split("-")[2],
+                      ];
 
                 const t = tagStyle(event.tag);
 
                 return (
-                  <TouchableOpacity key={event.id} style={[styles.eventCard, { 
-                    backgroundColor: colors.cardBg,
-                    borderColor: colors.border 
-                  }]}>
+                  <TouchableOpacity
+                    key={event.id}
+                    style={[
+                      styles.eventCard,
+                      {
+                        backgroundColor: colors.cardBg,
+                        borderColor: colors.border,
+                      },
+                    ]}
+                  >
                     {/* Date Badge */}
                     <View style={styles.dateBox}>
                       <Text style={styles.month}>{mon}</Text>
@@ -297,13 +361,25 @@ export default function Calendar() {
 
                     {/* Event Info */}
                     <View style={styles.eventInfo}>
-                      <Text numberOfLines={1} style={[styles.eventTitle, { color: colors.text }]}>
+                      <Text
+                        numberOfLines={1}
+                        style={[styles.eventTitle, { color: colors.text }]}
+                      >
                         {event.title}
                       </Text>
                       <View style={styles.eventMeta}>
-                        <MaterialIcons name="schedule" size={14} color="#6b7280" />
+                        <MaterialIcons
+                          name="schedule"
+                          size={14}
+                          color="#6b7280"
+                        />
                         <Text style={styles.eventTime}>{event.time}</Text>
-                        <Text style={[styles.eventTag, { backgroundColor: t.bg, color: t.fg }]}>
+                        <Text
+                          style={[
+                            styles.eventTag,
+                            { backgroundColor: t.bg, color: t.fg },
+                          ]}
+                        >
                           {event.tag}
                         </Text>
                       </View>
@@ -345,7 +421,8 @@ export default function Calendar() {
               <MaterialIcons name="close" size={24} color="#666" />
             </TouchableOpacity>
             <Text style={styles.modalTitle}>
-              Add Event - {selectedDate && `${months[month]} ${selectedDate}, ${year}`}
+              Add Event -{" "}
+              {selectedDate && `${months[month]} ${selectedDate}, ${year}`}
             </Text>
             <View style={{ width: 24 }} />
           </View>
@@ -356,7 +433,9 @@ export default function Calendar() {
               <TextInput
                 style={styles.input}
                 value={formData.title}
-                onChangeText={(text) => setFormData({...formData, title: text})}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, title: text })
+                }
                 placeholder="Enter event title"
                 placeholderTextColor="#999"
               />
@@ -367,7 +446,9 @@ export default function Calendar() {
               <TextInput
                 style={styles.input}
                 value={formData.time}
-                onChangeText={(text) => setFormData({...formData, time: text})}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, time: text })
+                }
                 placeholder="e.g., 10:00 AM or All Day"
                 placeholderTextColor="#999"
               />

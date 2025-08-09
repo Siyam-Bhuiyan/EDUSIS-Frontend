@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useTheme } from "../../theme/ThemeProvider"; // ✅ added
+import { useTheme } from "../../theme/ThemeProvider";
 
 /**
  * Topbar component for the EduSIS app
