@@ -1,16 +1,27 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-// Screens
+// Screens (content only; no headers inside them)
 import StudentDashboard from "../../components/StudentDashboard";
 import Assignments from "../../components/student/Assignments";
 import Classes from "../../components/student/Classes";
 import Results from "../../components/student/Results";
 import Calendar from "../../components/student/Calendar";
+import Profile from "../../components/student/Profile";
 
+// Shared UI
 import Sidebar from "../../components/Sidebar";
+import AppShell from "../../components/layout/AppShell";
 
 const Drawer = createDrawerNavigator();
+
+/** Helper to wrap any screen with the global AppShell */
+const withShell = (Component, shellProps) => (props) =>
+  (
+    <AppShell {...shellProps}>
+      <Component {...props} />
+    </AppShell>
+  );
 
 export default function StudentNavigator() {
   const quickActions = [
@@ -40,11 +51,11 @@ export default function StudentNavigator() {
   return (
     <Drawer.Navigator
       screenOptions={{
-        headerShown: false, // we render our own header in screens
+        headerShown: false, // we render TopBar ourselves
         drawerType: "slide",
         drawerStyle: { width: 280 },
         overlayColor: "rgba(0,0,0,0.25)",
-        swipeEdgeWidth: 80, // swipe from the left edge to open
+        swipeEdgeWidth: 80,
         gestureEnabled: true,
       }}
       drawerContent={(props) => (
@@ -57,11 +68,48 @@ export default function StudentNavigator() {
         />
       )}
     >
-      <Drawer.Screen name="StudentDashboard" component={StudentDashboard} />
-      <Drawer.Screen name="Assignments" component={Assignments} />
-      <Drawer.Screen name="Classes" component={Classes} />
-      <Drawer.Screen name="Results" component={Results} />
-      <Drawer.Screen name="Calendar" component={Calendar} />
+      <Drawer.Screen
+        name="StudentDashboard"
+        component={withShell(StudentDashboard, {
+          title: "Siyam",
+          subtitle: "ID: 210041215",
+        })}
+      />
+      <Drawer.Screen
+        name="Assignments"
+        component={withShell(Assignments, {
+          title: "Student",
+          subtitle: "Assignments",
+        })}
+      />
+      <Drawer.Screen
+        name="Classes"
+        component={withShell(Classes, {
+          title: "Student",
+          subtitle: "Classes",
+        })}
+      />
+      <Drawer.Screen
+        name="Results"
+        component={withShell(Results, {
+          title: "Student",
+          subtitle: "Results",
+        })}
+      />
+      <Drawer.Screen
+        name="Calendar"
+        component={withShell(Calendar, {
+          title: "Student",
+          subtitle: "Calendar",
+        })}
+      />
+      <Drawer.Screen
+        name="Profile"
+        component={withShell(Profile, {
+          title: "Student",
+          subtitle: "Profile",
+        })}
+      />
     </Drawer.Navigator>
   );
 }
