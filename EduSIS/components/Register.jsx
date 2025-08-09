@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,33 +9,37 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
-} from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+  Image,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 const Register = ({ navigation }) => {
-  const [role, setRole] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [role, setRole] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleRegister = () => {
     if (!role || !name || !email || !password) {
-      Alert.alert('Error', 'All fields are required.');
+      Alert.alert("Error", "All fields are required.");
       return;
     }
 
     // TODO: Connect to API
-    Alert.alert('Success', 'Registration successful!');
-    navigation.navigate('Login');
+    Alert.alert("Success", "Registration successful!");
+    navigation.navigate("Login");
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.wrapper}>
+          <View style={styles.logoWrap}>
+            <Image source={require("../assets/logo.jpg")} style={styles.logo} />
+          </View>
           <Text style={styles.title}>Create Account</Text>
           <Text style={styles.subtitle}>Join EDUCONNECT today</Text>
 
@@ -84,11 +88,11 @@ const Register = ({ navigation }) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => navigation.navigate('Login')}
+              onPress={() => navigation.navigate("Login")}
               style={styles.loginLink}
             >
               <Text style={styles.loginText}>
-                Already have an account?{' '}
+                Already have an account?{" "}
                 <Text style={styles.loginBold}>Login</Text>
               </Text>
             </TouchableOpacity>
@@ -104,73 +108,87 @@ export default Register;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: "#f5f7fa",
   },
   scroll: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 24,
   },
   wrapper: {
-    alignItems: 'center',
+    alignItems: "center",
+  },
+  logoWrap: {
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  logo: {
+    width: 70,
+    height: 70,
+    borderRadius: 16,
+    marginBottom: 6,
+    shadowColor: "#000",
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 6,
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
-    color: '#2c3e50',
+    fontWeight: "700",
+    color: "#2c3e50",
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#7f8c8d',
+    color: "#7f8c8d",
     marginBottom: 24,
   },
   form: {
-    width: '100%',
+    width: "100%",
     gap: 16,
   },
   picker: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 8,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     height: 50,
     paddingHorizontal: 10,
-    color: '#333',
+    color: "#333",
   },
   input: {
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 8,
     paddingHorizontal: 15,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderWidth: 1,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   button: {
-    backgroundColor: '#2ecc71',
+    backgroundColor: "#2ecc71",
     paddingVertical: 15,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
     elevation: 3,
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: '600',
+    color: "#fff",
+    fontWeight: "600",
     fontSize: 16,
   },
   loginLink: {
     marginTop: 15,
-    alignItems: 'center',
+    alignItems: "center",
   },
   loginText: {
-    color: '#7f8c8d',
+    color: "#7f8c8d",
     fontSize: 14,
   },
   loginBold: {
-    fontWeight: '700',
-    color: '#2ecc71',
+    fontWeight: "700",
+    color: "#2ecc71",
   },
 });

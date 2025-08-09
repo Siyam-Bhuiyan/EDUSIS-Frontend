@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   Alert,
+  Image,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
@@ -37,6 +38,9 @@ const Login = ({ navigation }) => {
     >
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.wrapper}>
+          <View style={styles.logoWrap}>
+            <Image source={require("../assets/logo.jpg")} style={styles.logo} />
+          </View>
           <Text style={styles.title}>Welcome</Text>
           <Text style={styles.subtitle}>Login to EDUCONNECT</Text>
 
@@ -98,6 +102,20 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f5f7fa" },
   scroll: { flexGrow: 1, justifyContent: "center", padding: 24 },
   wrapper: { alignItems: "center" },
+  logoWrap: {
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  logo: {
+    width: 70,
+    height: 70,
+    borderRadius: 16,
+    marginBottom: 6,
+    shadowColor: "#000",
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 6,
+  },
   title: { fontSize: 28, fontWeight: "700", color: "#2c3e50", marginBottom: 8 },
   subtitle: { fontSize: 16, color: "#7f8c8d", marginBottom: 24 },
   form: { width: "100%", gap: 16 },
