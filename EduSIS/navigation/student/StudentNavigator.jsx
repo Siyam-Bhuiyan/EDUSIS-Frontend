@@ -4,7 +4,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 // Screens (content only; no headers inside them)
 import StudentDashboard from "../../components/StudentDashboard";
 import Assignments from "../../components/student/Assignments";
-import Classes from "../../components/student/Messages";
+import Messages from "../../components/student/Messages";
 import Results from "../../components/student/Results";
 import Calendar from "../../components/student/Calendar";
 import Profile from "../../components/student/Profile";
@@ -26,7 +26,7 @@ const withShell = (Component, shellProps) => (props) =>
 export default function StudentNavigator() {
   const quickActions = [
     { id: 1, title: "Assignments", icon: "assignment", screen: "Assignments" },
-    { id: 2, title: "Classes", icon: "class", screen: "Classes" },
+    { id: 2, title: "Messages", icon: "class", screen: "Messages" },
     { id: 3, title: "Results", icon: "assessment", screen: "Results" },
     { id: 4, title: "Calendar", icon: "event", screen: "Calendar" },
   ];
@@ -83,10 +83,10 @@ export default function StudentNavigator() {
         })}
       />
       <Drawer.Screen
-        name="Classes"
-        component={withShell(Classes, {
+        name="Messages"
+        component={withShell(Messages, {
           title: "Student",
-          subtitle: "Classes",
+          subtitle: "Messages",
         })}
       />
       <Drawer.Screen
