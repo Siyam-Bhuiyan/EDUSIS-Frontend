@@ -14,6 +14,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTheme } from "../../theme/ThemeProvider";
 
 const CHANNELS = { TEACHER: "teacher", GROUP: "group" };
 const { width } = Dimensions.get("window");
@@ -36,6 +37,7 @@ const formatDayLabel = (ts) => {
 
 export default function Messages() {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
 
   const [studentId] = useState("210041215");
   const [courses, setCourses] = useState([]);
@@ -171,19 +173,25 @@ export default function Messages() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: colors.bg }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={insets.top + 92}
     >
       {/* Top controls */}
-      <View style={styles.topBar}>
+      <View style={[styles.topBar, { 
+        backgroundColor: colors.cardBg,
+        borderBottomColor: colors.border 
+      }]}>
         <View style={styles.dropWrap}>
-          <View style={styles.pickerBox}>
+          <View style={[styles.pickerBox, { 
+            borderColor: colors.border,
+            backgroundColor: colors.inputBg 
+          }]}>
             <Picker
               selectedValue={selectedCourseId}
               onValueChange={(v) => setSelectedCourseId(v)}
-              dropdownIconColor="#1e90ff"
-              style={styles.picker}
+              dropdownIconColor={colors.primary}
+              style={[styles.picker, { color: colors.text }]}
             >
               {courses.map((c) => (
                 <Picker.Item key={c.course_id} label={`${c.course_id}`} value={c.course_id} />
@@ -197,7 +205,7 @@ export default function Messages() {
             <Picker
               selectedValue={channel}
               onValueChange={(v) => setChannel(v)}
-              dropdownIconColor="#1e90ff"
+              dropdownIconColor={colors.primary}
               style={styles.picker}
             >
               <Picker.Item label="Group Chat" value={CHANNELS.GROUP} />
@@ -229,9 +237,13 @@ export default function Messages() {
       </View>
 
       {/* Composer */}
-      <View style={[styles.inputRow, { paddingBottom: Math.max(insets.bottom, 10) }]}>
+      <View style={[styles.inputRow, { backgroundColor: colors.bg, paddingBottom: Math.max(insets.bottom, 10) }]}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { 
+            backgroundColor: colors.inputBg,
+            borderColor: colors.border,
+            color: colors.text
+          }]}
           value={draft}
           onChangeText={setDraft}
           placeholder={channel === CHANNELS.TEACHER ? "Message your teacher…" : "Message the group…"}
@@ -239,9 +251,10 @@ export default function Messages() {
           onSubmitEditing={sendMessage}
           multiline
           maxLength={1000}
+          placeholderTextColor={colors.textDim}
         />
         <TouchableOpacity
-          style={[styles.sendBtn, !draft.trim() && { opacity: 0.5 }]}
+          style={[styles.sendBtn, { backgroundColor: colors.primary, opacity: !draft.trim() ? 0.5 : 1 }]}
           onPress={sendMessage}
           disabled={!draft.trim()}
           activeOpacity={0.9}
@@ -256,7 +269,7 @@ export default function Messages() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f7fa" },
+  container: { flex: 1 },
 
   // top row with two dropdowns
   topBar: {
@@ -265,7 +278,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingTop: 5,
     paddingBottom: 5,
-    backgroundColor: "#fff",
     elevation: 2,
     shadowColor: "#000",
     shadowOpacity: 0.05,
@@ -278,12 +290,10 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#e3e8ef",
     overflow: "hidden",
-    backgroundColor: "#fff",
     justifyContent: "center",
   },
-  picker: { width: "100%", height: 53, color: "#2c3e50" },
+  picker: { width: "100%", height: 53 },
 
   chatArea: { flex: 1, paddingHorizontal: 12, paddingTop: 8 },
 
@@ -304,7 +314,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   sent: {
-    backgroundColor: "#1e90ff",
     elevation: 2,
     shadowColor: "#000",
     shadowOpacity: 0.07,
@@ -312,9 +321,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
   },
   received: {
-    backgroundColor: "#ffffff",
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "#e7edf3",
   },
 
   metaRow: {
@@ -336,11 +343,9 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     paddingHorizontal: 12,
     paddingTop: 6,
-    backgroundColor: "#f5f7fa",
   },
   input: {
     flex: 1,
-    backgroundColor: "#fff",
     borderRadius: 20,
     minHeight: 44,
     maxHeight: 120,
@@ -348,13 +353,11 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     borderWidth: 1,
-    borderColor: "#dcdde1",
     fontSize: 14.5,
     lineHeight: 20,
   },
   sendBtn: {
     marginLeft: 8,
-    backgroundColor: "#1e90ff",
     borderRadius: 20,
     padding: 10,
   },

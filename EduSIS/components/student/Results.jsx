@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { useTheme } from "../../theme/ThemeProvider";
 
 const DEMO_COURSES = [
   { course_id: "CSE-301", title: "Computer Networks" },
@@ -85,6 +86,7 @@ const getTopThreeQuizzesTotal = (g) => {
 };
 
 export default function Results() {
+  const { colors } = useTheme();
   const [selectedCourse, setSelectedCourse] = useState("");
 
   const grades = useMemo(
@@ -97,17 +99,26 @@ export default function Results() {
 
   return (
     <ScrollView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: colors.bg }]}
       contentContainerStyle={{ padding: 16 }}
     >
-      <Text style={styles.title}>Results</Text>
+      <Text style={[styles.title, { color: colors.text }]}>Results</Text>
 
       {/* Course Picker */}
-      <View style={styles.selectWrap}>
+      <View
+        style={[
+          styles.selectWrap,
+          {
+            backgroundColor: colors.cardBg,
+            borderColor: colors.border,
+          },
+        ]}
+      >
         <Picker
           selectedValue={selectedCourse}
           onValueChange={(v) => setSelectedCourse(v)}
-          style={styles.picker}
+          style={[styles.picker, { color: colors.text }]}
+          dropdownIconColor={colors.primary}
         >
           <Picker.Item label="-- Choose a Course --" value="" />
           {DEMO_COURSES.map((c) => (
@@ -125,8 +136,18 @@ export default function Results() {
         <View style={styles.cardsWrap}>
           <Text style={styles.sectionHeading}>Grades for {selectedCourse}</Text>
 
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Quizzes</Text>
+          <View
+            style={[
+              styles.card,
+              {
+                backgroundColor: colors.cardBg,
+                borderColor: colors.border,
+              },
+            ]}
+          >
+            <Text style={[styles.cardTitle, { color: colors.text }]}>
+              Quizzes
+            </Text>
             <Text style={styles.rowText}>Quiz 1: {grades.quiz1_marks}</Text>
             <Text style={styles.rowText}>Quiz 2: {grades.quiz2_marks}</Text>
             <Text style={styles.rowText}>Quiz 3: {grades.quiz3_marks}</Text>
@@ -136,8 +157,18 @@ export default function Results() {
             </Text>
           </View>
 
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Assignments & Attendance</Text>
+          <View
+            style={[
+              styles.card,
+              {
+                backgroundColor: colors.cardBg,
+                borderColor: colors.border,
+              },
+            ]}
+          >
+            <Text style={[styles.cardTitle, { color: colors.text }]}>
+              Assignments & Attendance
+            </Text>
             <Text style={styles.rowText}>
               Assignments: {grades.assignments_marks}
             </Text>
@@ -146,14 +177,28 @@ export default function Results() {
             </Text>
           </View>
 
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Mid & Final</Text>
+          <View
+            style={[
+              styles.card,
+              {
+                backgroundColor: colors.cardBg,
+                borderColor: colors.border,
+              },
+            ]}
+          >
+            <Text style={[styles.cardTitle, { color: colors.text }]}>
+              Mid & Final
+            </Text>
             <Text style={styles.rowText}>Mid: {grades.mid_sem_marks}</Text>
             <Text style={styles.rowText}>Final: {grades.final_sem_marks}</Text>
           </View>
 
           <View
-            style={[styles.card, styles.totalCard, { borderColor: borderClr }]}
+            style={[
+              styles.card,
+              styles.totalCard,
+              { borderColor: borderClr },
+            ]}
           >
             <Text style={styles.cardTitle}>Total Marks & Grade</Text>
             <Text style={styles.rowText}>
@@ -174,29 +219,25 @@ export default function Results() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f7fa" },
+  container: { flex: 1 },
   title: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#2c3e50",
     marginBottom: 12,
   },
 
   selectWrap: {
-    backgroundColor: "#fff",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#ecf0f1",
     marginBottom: 12,
     overflow: "hidden",
   },
-  picker: { height: 55, color: "#1b5d6dff" },
+  picker: { height: 55 },
 
   cardsWrap: { gap: 12 },
-  sectionHeading: { fontSize: 16, fontWeight: "700", color: "#2c3e50" },
+  sectionHeading: { fontSize: 16, fontWeight: "700" },
 
   card: {
-    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 14,
     elevation: 3,
@@ -204,17 +245,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 6,
     borderWidth: 1,
-    borderColor: "#ecf0f1",
   },
   totalCard: { borderWidth: 2 },
 
   cardTitle: {
     fontSize: 15,
     fontWeight: "800",
-    color: "#2c3e50",
     marginBottom: 8,
   },
-  rowText: { fontSize: 14, color: "#34495e", marginTop: 4 },
+  rowText: { fontSize: 14, marginTop: 4 },
   em: { fontWeight: "800", color: "#1e90ff" },
 
   gradeText: { fontWeight: "800" },

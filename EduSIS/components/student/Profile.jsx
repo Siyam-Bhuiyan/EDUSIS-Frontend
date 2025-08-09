@@ -1,195 +1,333 @@
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import React, { useMemo } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
+import { useTheme } from "../../theme/ThemeProvider";
+import { LinearGradient } from "expo-linear-gradient";
+
+const { width } = Dimensions.get("window");
 
 // Helper to format ISO/string dates as DD/MM/YYYY
 const formatDate = (dateString) => {
   try {
     const d = new Date(dateString);
-    const dd = String(d.getDate()).padStart(2, '0');
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
     const yyyy = d.getFullYear();
     return `${dd}/${mm}/${yyyy}`;
   } catch {
-    return dateString || 'Not Available';
+    return dateString || "Not Available";
   }
 };
 
 export default function Profile() {
+  const { colors, isDark } = useTheme();
+
   // ===== Dummy student data (replace with API later) =====
   const student = useMemo(
     () => ({
-      name: 'John Doe',
-      student_id: '2021-CSE-101',
-      department: 'Computer Science & Engineering',
-      program: 'BSc in CSE',
-      semester: '5th',
-      cgpa: '3.72',
-      credits_earned: 78,
-      email: 'john.doe@example.edu',
-      phone_number: '+880-1711-000000',
-      address: 'Dhaka, Bangladesh 1205',
-      date_of_birth: '2003-02-14',
-      blood_group: 'O+',
-      emergency_contact: { name: 'Jane Doe', relationship: 'Mother', phone: '+880-1811-111111' },
-      country: 'Bangladesh',
-      avatar: require('../../assets/profile.jpg'),
+      name: "Siyam Bhuiyan",
+      student_id: "210041215",
+      program: "BSc in CSE",
+      semester: "6th",
+      cgpa: "2.99",
+      credits_earned: 92,
+      email: "siyam.bhuiyan@example.edu",
+      phone_number: "+880-1711-000000",
+      address: "Dhaka, Bangladesh 1205",
+      date_of_birth: "2003-02-14",
+      blood_group: "O+",
+      emergency_contact: {
+        name: "Ms Bhuiyan",
+        relationship: "Mother",
+        phone: "+880-1811-111111",
+      },
+      country: "Bangladesh",
+      avatar: require("../../assets/profile.jpg"),
     }),
     []
   );
 
-  const infoCards = [
-    { label: "Father's Name", value: 'Richard Doe', icon: null },
-    { label: "Mother's Name", value: 'Jane Doe', icon: null },
-    { label: 'Date of Birth', value: formatDate(student.date_of_birth), icon: null },
-    { label: 'Address', value: student.address, icon: 'map-marker-alt' },
-    { label: 'Phone', value: student.phone_number, icon: 'phone' },
-    { label: 'Email', value: student.email, icon: 'envelope' },
-    { label: 'Blood Group', value: student.blood_group, icon: 'tint' },
-    { label: 'Program', value: student.program, icon: 'university' },
-    { label: 'CGPA', value: student.cgpa, icon: 'chart-line' },
-    { label: 'Credits Earned', value: `${student.credits_earned}`, icon: 'check-circle' },
-    { label: 'Emergency Contact Name', value: student.emergency_contact?.name, icon: 'user-friends' },
-    { label: 'Relationship', value: student.emergency_contact?.relationship, icon: 'users' },
-    { label: 'Emergency Contact Phone', value: student.emergency_contact?.phone, icon: 'phone' },
+  const statsCards = [
+    {
+      icon: "graduation-cap",
+      label: "CGPA",
+      value: student.cgpa,
+      color: "#4CAF50",
+    },
+    {
+      icon: "book-reader",
+      label: "Credits",
+      value: student.credits_earned,
+      color: "#2196F3",
+    },
+    {
+      icon: "calendar-alt",
+      label: "Semester",
+      value: student.semester,
+      color: "#9C27B0",
+    },
+  ];
+
+  const sections = [
+    {
+      title: "Academic Information",
+      icon: "university",
+      items: [
+        { label: "Department", value: student.department },
+        { label: "Program", value: student.program },
+        { label: "Student ID", value: student.student_id },
+      ],
+    },
+    {
+      title: "Personal Information",
+      icon: "user",
+      items: [
+        { label: "Father's Name", value: "Richard Doe" },
+        { label: "Mother's Name", value: "Jane Doe" },
+        { label: "Date of Birth", value: formatDate(student.date_of_birth) },
+        { label: "Blood Group", value: student.blood_group },
+        { label: "Country", value: student.country },
+      ],
+    },
+    {
+      title: "Contact Information",
+      icon: "address-book",
+      items: [
+        { label: "Email", value: student.email, icon: "envelope" },
+        { label: "Phone", value: student.phone_number, icon: "phone" },
+        { label: "Address", value: student.address, icon: "map-marker-alt" },
+      ],
+    },
+    {
+      title: "Emergency Contact",
+      icon: "first-aid",
+      items: [
+        { label: "Name", value: student.emergency_contact?.name },
+        {
+          label: "Relationship",
+          value: student.emergency_contact?.relationship,
+        },
+        { label: "Phone", value: student.emergency_contact?.phone },
+      ],
+    },
   ];
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ padding: 16 }}>
-      {/* Header Card */}
-      <View style={styles.headerCard}>
-        <Image source={student.avatar} style={styles.avatar} />
-        <View style={{ flex: 1 }}>
-          <Text style={styles.name}>{student.name}</Text>
-          <Text style={styles.sub}>
-            <Text style={styles.bold}>ID:</Text> {student.student_id}
-          </Text>
-          <Text style={styles.sub}>
-            <Text style={styles.bold}>Country:</Text> {student.country || 'Not Available'}
-          </Text>
-          <Text style={styles.sub}>
-            <Text style={styles.bold}>Department:</Text> {student.department || 'Not Available'}
-          </Text>
-          <Text style={styles.sub}>
-            <Text style={styles.bold}>Semester:</Text> {student.semester || '—'}
-          </Text>
+    <ScrollView style={[styles.container, { backgroundColor: colors.bg }]}>
+      {/* Profile Header */}
+      <LinearGradient
+        colors={isDark ? ["#1a2234", "#2d3748"] : ["#1e90ff", "#6fb1fc"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
+        <View style={styles.avatarContainer}>
+          <Image source={student.avatar} style={styles.avatar} />
+          <View style={styles.onlineIndicator} />
         </View>
+        <Text style={styles.name}>{student.name}</Text>
+        <Text style={styles.role}>{student.department}</Text>
+      </LinearGradient>
+
+      {/* Stats Cards */}
+      <View style={styles.statsContainer}>
+        {statsCards.map((stat, index) => (
+          <View
+            key={stat.label}
+            style={[styles.statCard, { backgroundColor: colors.cardBg }]}
+          >
+            <FontAwesome5 name={stat.icon} size={24} color={stat.color} />
+            <Text style={[styles.statValue, { color: colors.text }]}>
+              {stat.value}
+            </Text>
+            <Text style={[styles.statLabel, { color: colors.textDim }]}>
+              {stat.label}
+            </Text>
+          </View>
+        ))}
       </View>
 
-      {/* Account Quick Actions */}
-      <View style={styles.quickRow}>
-        <TouchableOpacity style={styles.quickBtn} activeOpacity={0.85}>
-          <MaterialIcons name="edit" size={18} color="#fff" />
-          <Text style={styles.quickText}>Edit Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.quickBtn} activeOpacity={0.85}>
-          <MaterialIcons name="lock" size={18} color="#fff" />
-          <Text style={styles.quickText}>Security</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.quickBtn} activeOpacity={0.85}>
-          <MaterialIcons name="notifications" size={18} color="#fff" />
-          <Text style={styles.quickText}>Notifications</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Details */}
-      <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>
-          <FontAwesome5 name="address-card" size={16} color="#1e90ff" /> Personal Details
-        </Text>
-
-        {infoCards.map((info, idx) =>
-          info.value ? (
-            <View
-              key={`${info.label}-${idx}`}
-              style={[styles.infoRow, idx % 2 === 0 ? styles.even : styles.odd]}
-            >
-              <View style={styles.infoLeft}>
-                {info.icon ? (
-                  <FontAwesome5
-                    name={info.icon}
-                    size={14}
-                    color="#1e90ff"
-                    style={{ marginRight: 8 }}
-                  />
-                ) : null}
-                <Text style={styles.infoLabel}>{info.label}</Text>
-              </View>
-              <Text style={styles.infoValue}>{info.value}</Text>
+      {/* Information Sections */}
+      <View style={styles.sectionsContainer}>
+        {sections.map((section, sIndex) => (
+          <View
+            key={section.title}
+            style={[styles.sectionCard, { backgroundColor: colors.cardBg }]}
+          >
+            <View style={styles.sectionHeader}>
+              <FontAwesome5
+                name={section.icon}
+                size={16}
+                color={colors.primary}
+              />
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                {section.title}
+              </Text>
             </View>
-          ) : null
-        )}
+            {section.items.map((item, iIndex) => (
+              <View
+                key={item.label}
+                style={[
+                  styles.infoRow,
+                  {
+                    backgroundColor: isDark
+                      ? iIndex % 2 === 0
+                        ? "rgba(255,255,255,0.03)"
+                        : "transparent"
+                      : iIndex % 2 === 0
+                      ? "rgba(0,0,0,0.02)"
+                      : "transparent",
+                  },
+                ]}
+              >
+                <Text style={[styles.infoLabel, { color: colors.textDim }]}>
+                  {item.label}
+                </Text>
+                <Text style={[styles.infoValue, { color: colors.text }]}>
+                  {item.value || "Not Available"}
+                </Text>
+              </View>
+            ))}
+          </View>
+        ))}
       </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f7fa' },
-
-  headerCard: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderRadius: 14,
-    padding: 14,
-    alignItems: 'center',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    marginBottom: 16,
-  },
-  avatar: { width: 64, height: 64, borderRadius: 32, marginRight: 12 },
-  name: { fontSize: 20, fontWeight: '800', color: '#2c3e50' },
-  sub: { fontSize: 13, color: '#7f8c8d', marginTop: 2 },
-  bold: { fontWeight: '700', color: '#2c3e50' },
-
-  quickRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 16,
-  },
-  quickBtn: {
+  container: {
     flex: 1,
-    backgroundColor: '#1e90ff',
-    paddingVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 6,
-    elevation: 2,
   },
-  quickText: { color: '#fff', fontWeight: '700', fontSize: 13 },
-
-  sectionCard: {
-    backgroundColor: '#fff',
-    borderRadius: 14,
-    padding: 10,
+  header: {
+    paddingTop: 40,
+    paddingBottom: 24,
+    alignItems: "center",
+  },
+  avatarContainer: {
+    marginBottom: 16,
+    position: "relative",
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 4,
+    borderColor: "rgba(255,255,255,0.8)",
+  },
+  onlineIndicator: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: "#4CAF50",
+    borderWidth: 2.5,
+    borderColor: "#fff",
+    position: "absolute",
+    bottom: 4,
+    right: 4,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: "#fff",
+    marginBottom: 4,
+  },
+  role: {
+    fontSize: 14,
+    color: "rgba(255,255,255,0.9)",
+    fontWeight: "500",
+  },
+  statsContainer: {
+    flexDirection: "row",
+    marginHorizontal: 16,
+    marginTop: -30,
+    gap: 12,
+  },
+  statCard: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 12,
+    alignItems: "center",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  statValue: {
+    fontSize: 20,
+    fontWeight: "800",
+    marginTop: 8,
+  },
+  statLabel: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  quickActionsContainer: {
+    flexDirection: "row",
+    padding: 16,
+    gap: 12,
+  },
+  actionButton: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 12,
+    alignItems: "center",
     elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  actionText: {
+    marginTop: 4,
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  sectionsContainer: {
+    padding: 16,
+    paddingTop: 0,
+    gap: 16,
+    marginTop: 16,
+  },
+  sectionCard: {
+    borderRadius: 16,
+    overflow: "hidden",
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(0,0,0,0.1)",
   },
   sectionTitle: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#2c3e50',
-    marginBottom: 8,
-    marginLeft: 4,
+    fontSize: 16,
+    fontWeight: "700",
   },
-
   infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    borderRadius: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 12,
+    paddingHorizontal: 16,
   },
-  even: { backgroundColor: '#f9fbfe' },
-  odd: { backgroundColor: '#ffffff' },
-
-  infoLeft: { flexDirection: 'row', alignItems: 'center', flex: 0.9 },
-  infoLabel: { fontSize: 14, color: '#34495e', fontWeight: '700' },
-  infoValue: { flex: 1.1, textAlign: 'right', fontSize: 14, color: '#2c3e50', fontWeight: '600' },
+  infoLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  infoValue: {
+    fontSize: 14,
+  },
 });

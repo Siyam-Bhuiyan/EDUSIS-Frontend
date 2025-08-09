@@ -11,6 +11,7 @@ import {
   Dimensions
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useTheme } from "../../theme/ThemeProvider";
 
 const { width } = Dimensions.get('window');
 
@@ -45,6 +46,7 @@ const months = [
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function Calendar() {
+  const { colors } = useTheme();
   const [events, setEvents] = useState(initialEvents);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
@@ -212,12 +214,15 @@ export default function Calendar() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.bg }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { 
+        backgroundColor: colors.cardBg,
+        borderBottomColor: colors.border 
+      }]}>
         <View style={styles.titleContainer}>
           <MaterialIcons name="event" size={24} color="#1e90ff" />
-          <Text style={styles.title}>Calendar</Text>
+          <Text style={[styles.title, { color: colors.text }]}>Calendar</Text>
         </View>
         <TouchableOpacity
           onPress={() => setView(view === "calendar" ? "list" : "calendar")}
@@ -262,7 +267,7 @@ export default function Calendar() {
             </View>
 
             {/* Calendar Grid */}
-            <View style={styles.calendarGrid}>
+            <View style={[styles.calendarGrid, { backgroundColor: colors.cardBg }]}>
               {renderCalendar()}
             </View>
           </>
@@ -280,7 +285,10 @@ export default function Calendar() {
                 const t = tagStyle(event.tag);
 
                 return (
-                  <TouchableOpacity key={event.id} style={styles.eventCard}>
+                  <TouchableOpacity key={event.id} style={[styles.eventCard, { 
+                    backgroundColor: colors.cardBg,
+                    borderColor: colors.border 
+                  }]}>
                     {/* Date Badge */}
                     <View style={styles.dateBox}>
                       <Text style={styles.month}>{mon}</Text>
@@ -289,7 +297,7 @@ export default function Calendar() {
 
                     {/* Event Info */}
                     <View style={styles.eventInfo}>
-                      <Text numberOfLines={1} style={styles.eventTitle}>
+                      <Text numberOfLines={1} style={[styles.eventTitle, { color: colors.text }]}>
                         {event.title}
                       </Text>
                       <View style={styles.eventMeta}>

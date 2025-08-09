@@ -1,7 +1,10 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { useTheme } from "../../theme/ThemeProvider";
 
 const Assignments = () => {
+  const { colors } = useTheme();
+
   const items = [
     {
       id: 1,
@@ -19,15 +22,30 @@ const Assignments = () => {
 
   return (
     <ScrollView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: colors.bg }]}
       contentContainerStyle={{ padding: 16 }}
     >
-      <Text style={styles.title}>Assignments</Text>
+      <Text style={[styles.title, { color: colors.text }]}>Assignments</Text>
       {items.map((it) => (
-        <View key={it.id} style={styles.card}>
-          <Text style={styles.cardTitle}>{it.title}</Text>
-          <Text style={styles.cardSub}>Due: {it.due}</Text>
-          <Text style={styles.badge}>{it.status}</Text>
+        <View
+          key={it.id}
+          style={[
+            styles.card,
+            {
+              backgroundColor: colors.cardBg,
+              borderColor: colors.border,
+            },
+          ]}
+        >
+          <Text style={[styles.cardTitle, { color: colors.text }]}>
+            {it.title}
+          </Text>
+          <Text style={[styles.cardSub, { color: colors.textDim }]}>
+            Due: {it.due}
+          </Text>
+          <Text style={[styles.badge, { color: colors.primary }]}>
+            {it.status}
+          </Text>
         </View>
       ))}
     </ScrollView>

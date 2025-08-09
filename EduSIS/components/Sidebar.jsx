@@ -10,6 +10,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
+import { useTheme } from "../theme/ThemeProvider";
 
 /**
  * Sidebar (Drawer content)
@@ -24,6 +25,7 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
  * - footerActions?: same shape as quickActions
  * - brandTitle?: string
  */
+
 export default function Sidebar({
   navigation,
   user = { name: "User", sub: "Welcome to EDUSIS" },
@@ -31,16 +33,25 @@ export default function Sidebar({
   footerActions = [],
   brandTitle = "Quick Actions",
 }) {
+  const { colors, isDark } = useTheme();
+
   const handlePress = (item) => {
     if (item?.onPress) return item.onPress();
     if (item?.screen) return navigation.navigate(item.screen);
   };
 
+  // Update the gradient colors based on theme
+  const gradientColors = isDark
+    ? ["#1a2234", "#2d3748"]
+    : ["#1e90ff", "#6fb1fc"];
+
   return (
-    <DrawerContentScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    <DrawerContentScrollView
+      contentContainerStyle={[styles.container, { backgroundColor: colors.bg }]}
+    >
       {/* Header */}
       <LinearGradient
-        colors={["#1e90ff", "#6fb1fc"]}
+        colors={gradientColors}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.header}
@@ -52,23 +63,36 @@ export default function Sidebar({
             <Text style={styles.appTag}>All-in-one University</Text>
           </View>
         </View>
-
       </LinearGradient>
 
       {/* Quick Actions */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{brandTitle}</Text>
-        <View style={styles.actionsWrap}>
+      <View style={[styles.section, { backgroundColor: colors.cardBg }]}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          {brandTitle}
+        </Text>
+        <View style={[styles.actionsWrap, { backgroundColor: colors.cardBg }]}>
           {quickActions.map((a) => (
             <TouchableOpacity
               key={a.id}
-              style={styles.actionItem}
+              style={[
+                styles.actionItem,
+                {
+                  borderBottomColor: colors.border,
+                  backgroundColor: colors.cardBg,
+                },
+              ]}
               onPress={() => handlePress(a)}
               activeOpacity={0.85}
             >
-              <MaterialIcons name={a.icon} size={22} color="#1e90ff" />
-              <Text style={styles.actionText}>{a.title}</Text>
-              <MaterialIcons name="chevron-right" size={20} color="#a3b1c2" />
+              <MaterialIcons name={a.icon} size={22} color={colors.primary} />
+              <Text style={[styles.actionText, { color: colors.text }]}>
+                {a.title}
+              </Text>
+              <MaterialIcons
+                name="chevron-right"
+                size={20}
+                color={colors.textDim}
+              />
             </TouchableOpacity>
           ))}
         </View>
@@ -80,12 +104,14 @@ export default function Sidebar({
           {footerActions.map((a) => (
             <TouchableOpacity
               key={a.id}
-              style={styles.footerItem}
+              style={[styles.footerItem, { backgroundColor: colors.cardBg }]}
               onPress={() => handlePress(a)}
               activeOpacity={0.85}
             >
-              <MaterialIcons name={a.icon} size={20} color="#6b7c93" />
-              <Text style={styles.footerText}>{a.title}</Text>
+              <MaterialIcons name={a.icon} size={20} color={colors.textDim} />
+              <Text style={[styles.footerText, { color: colors.textDim }]}>
+                {a.title}
+              </Text>
             </TouchableOpacity>
           ))}
           <TouchableOpacity

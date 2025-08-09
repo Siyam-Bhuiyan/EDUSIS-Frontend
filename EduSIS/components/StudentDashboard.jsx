@@ -2,8 +2,11 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet } from "react-native";
 import CourseCard from "./student/CourseCard";
+import { useTheme } from "../theme/ThemeProvider";
 
 export default function StudentDashboard() {
+  const { colors } = useTheme();
+
   // Demo data (with cover + teacher avatar)
   const courses = [
     {
@@ -47,14 +50,14 @@ export default function StudentDashboard() {
       title: "Mobile App Development",
       teacher: "Mr. Davis",
       section: "Section E",
-      coverUri: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=1400&q=60", 
+      coverUri: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=1400&q=60",
       teacherAvatarUri:
         "https://cse.iutoic-dhaka.edu/uploads/img/1601107015_1938.jpg",
     },
   ];
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView style={[styles.screen, { backgroundColor: colors.bg }]}>
       <ScrollView contentContainerStyle={styles.content}>
         {courses.map((c) => (
           <CourseCard
@@ -65,6 +68,8 @@ export default function StudentDashboard() {
             section={c.section}
             coverUri={c.coverUri}
             teacherAvatarUri={c.teacherAvatarUri}
+            // Pass theme colors to CourseCard if needed
+            colors={colors}
           />
         ))}
       </ScrollView>
