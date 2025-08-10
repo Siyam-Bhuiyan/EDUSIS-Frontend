@@ -1,32 +1,45 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
-import JitsiCall from "../JitsiCall";
-import { useRoute, useNavigation } from "@react-navigation/native";
+// path: components/teacher/JitsiMeetingScreen.jsx
+import React, { useMemo } from "react";
+import { View, StyleSheet, ActivityIndicator, Platform } from "react-native";
+import { WebView } from "react-native-webview";
 
-export default function JitsiMeetingScreen() {
-  const route = useRoute();
-  const navigation = useNavigation();
+// Very simple in-app Jitsi using WebView
+export default function JitsiMeetingScreen({ route }) {
+  const { room = "edusis-room", subject = "EDUSIS Class", user = { name: "Guest" } } =
+    route?.params || {};
 
-  const {
-    room = "edusis-demo-room",
-    subject = "EDUSIS Live Class",
-    user = { name: "Teacher", email: "" },
-    serverURL, // optional
-  } = route.params || {};
+  // Build a clean Jitsi URL (meet.jit.si works without auth by default)
+  const jitsiUrl = useMemo(() => {
+    const base = `https://meet.jit.si/${encodeURIComponent(room)}`;
+    const ui =
+      "#config.disableDeepLinking=true&config.prejoinConfig.enabled=true&interfaceConfig.DISABLE_JOIN_LEAVE_NOTIFICATIONS=true";
+    return base + ui;
+  }, [room]);
 
   return (
-    <View style={styles.screen}>
-      <JitsiCall
-        room={room}
-        subject={subject}
-        user={user}
-        serverURL={serverURL}
-        onEnd={() => navigation.goBack()}
+    <View style={styles.container}>
+      <WebView
+        source={{ uri: jitsiUrl }}
+        startInLoadingState
+        incognito
+        javaScriptEnabled
+        domStorageEnabled
+        allowsInlineMediaPlayback
+        mediaPlaybackRequiresUserAction={false}
+        setSupportMultipleWindows={false}
+        renderLoading={() => (
+          <View style={styles.loader}>
+            <ActivityIndicator size="large" />
+          </View>
+        )}
+        // Improve Android autoplay
+        {...(Platform.OS === "android" ? { mixedContentMode: "always" } : {})}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#000" },
+  container: { flex: 1, backgroundColor: "#000" },
+  loader: { flex: 1, alignItems: "center", justifyContent: "center" },
 });
