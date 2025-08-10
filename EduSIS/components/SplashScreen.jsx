@@ -184,7 +184,7 @@ const SplashScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a2e', // Dark navy background
+    backgroundColor: '#1a1a2e',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     width: width * 0.7,
     height: width * 0.7,
     borderRadius: width * 0.35,
-    backgroundColor: 'rgba(255, 107, 107, 0.1)', // Very transparent coral
+    backgroundColor: 'rgba(255, 107, 107, 0.1)', 
     top: height * 0.1,
     right: -width * 0.2,
   },

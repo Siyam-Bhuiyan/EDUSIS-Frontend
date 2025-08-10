@@ -2,22 +2,31 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 // Screens
-import AdminDashboard from '../../components/AdminDashboard';
+import AdminDashboard from '../../components/admin/AdminDashboard';
 
-// Shared beautiful sidebar
+// Shared UI Components
 import Sidebar from '../../components/layout/Sidebar';
+import AppShell from '../../components/layout/AppShell';
 
 const Drawer = createDrawerNavigator();
+
+/** Helper to wrap any screen with the global AppShell */
+const withShell = (Component, shellProps) => (props) =>
+  (
+    <AppShell {...shellProps}>
+      <Component {...props} />
+    </AppShell>
+  );
 
 export default function AdminNavigator() {
   // Sidebar "Quick Actions" for admins
   const quickActions = [
-    { id: 1, title: 'Student/Faculty Mgmt', icon: 'people', screen: 'AdminDashboard' },
-    { id: 2, title: 'Departments', icon: 'account-tree', screen: 'AdminDashboard' },
-    { id: 3, title: 'Courses', icon: 'menu-book', screen: 'AdminDashboard' },
-    { id: 4, title: 'Assign Teachers', icon: 'person-add', screen: 'AdminDashboard' },
-    { id: 5, title: 'Enroll Students', icon: 'how-to-reg', screen: 'AdminDashboard' },
-    { id: 6, title: 'System Oversight', icon: 'admin-panel-settings', screen: 'AdminDashboard' },
+    { id: 'students', title: 'Students', icon: 'people', screen: 'AdminDashboard' },
+    { id: 'teachers', title: 'Teachers', icon: 'school', screen: 'AdminDashboard' },
+    { id: 'courses', title: 'Courses', icon: 'menu-book', screen: 'AdminDashboard' },
+    { id: 'departments', title: 'Departments', icon: 'account-tree', screen: 'AdminDashboard' },
+    { id: 'enroll', title: 'Student Enrollment', icon: 'how-to-reg', screen: 'AdminDashboard' },
+    { id: 'assign', title: 'Teacher Assignment', icon: 'person-add', screen: 'AdminDashboard' },
   ];
 
   const footerActions = [
@@ -34,6 +43,8 @@ export default function AdminNavigator() {
         drawerType: 'slide',
         drawerStyle: { width: 290 },
         overlayColor: 'rgba(0,0,0,0.25)',
+        swipeEdgeWidth: 80,
+        gestureEnabled: true,
       }}
       drawerContent={(props) => (
         <Sidebar
@@ -45,8 +56,14 @@ export default function AdminNavigator() {
         />
       )}
     >
-      <Drawer.Screen name="AdminDashboard" component={AdminDashboard} />
-      {/* Later: add Users, Departments, Courses, Enrollment screens */}
+      <Drawer.Screen
+        name="AdminDashboard"
+        component={withShell(AdminDashboard, {
+          title: 'Admin',
+          subtitle: 'Dashboard',
+        })}
+      />
+      {/* Add other admin screens here */}
     </Drawer.Navigator>
   );
 }
