@@ -47,7 +47,8 @@ export default function Sidebar({
 
   return (
     <DrawerContentScrollView
-      contentContainerStyle={[styles.container, { backgroundColor: colors.bg }]}
+      contentContainerStyle={[styles.container,
+         { backgroundColor: colors.bg, flex: 1 }]}
     >
       {/* Header */}
       <LinearGradient

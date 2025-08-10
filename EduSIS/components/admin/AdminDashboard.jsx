@@ -4,20 +4,21 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '../../theme/ThemeProvider';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useNavigation } from '@react-navigation/native';
 
 const AdminDashboard = () => {
   const { colors, isDark } = useTheme();
+  const navigation = useNavigation();
 
   const adminActions = [
-    { id: 1, title: 'Students', icon: 'people', gradient: ['#4facfe', '#00f2fe'] },
-    { id: 2, title: 'Teachers', icon: 'school', gradient: ['#43e97b', '#38f9d7'] },
-    { id: 3, title: 'Courses', icon: 'menu-book', gradient: ['#fa709a', '#fee140'] },
-    { id: 4, title: 'Departments', icon: 'account-tree', gradient: ['#6a11cb', '#2575fc'] },
-    { id: 5, title: 'Student Enrollment', icon: 'how-to-reg', gradient: ['#f77062', '#fe5196'] },
-    { id: 6, title: 'Teacher Assignment', icon: 'person-add', gradient: ['#667eea', '#764ba2'] },
+    { id: 1, title: 'Students', icon: 'people', gradient: ['#4facfe', '#00f2fe'], screen: 'Students' },
+    { id: 2, title: 'Teachers', icon: 'school', gradient: ['#43e97b', '#38f9d7'], screen: 'Teachers' },
+    { id: 3, title: 'Courses', icon: 'menu-book', gradient: ['#fa709a', '#fee140'], screen: 'Courses' },
+    { id: 4, title: 'Student Enrollment', icon: 'how-to-reg', gradient: ['#f77062', '#fe5196'], screen: 'StudentEnrollment' },
+    { id: 5, title: 'Teacher Assignment', icon: 'person-add', gradient: ['#667eea', '#764ba2'], screen: 'TeacherAssignment' },
   ];
 
-  const ActionCard = ({ title, icon, gradient, index }) => (
+  const ActionCard = ({ title, icon, gradient, screen, index }) => (
     <Animated.View
       entering={FadeInDown.delay(index * 100)}
       style={styles.cardContainer}
@@ -25,6 +26,7 @@ const AdminDashboard = () => {
       <TouchableOpacity
         style={[styles.card, { backgroundColor: colors.cardBg }]}
         activeOpacity={0.7}
+        onPress={() => navigation.navigate(screen)}
       >
         <LinearGradient
           colors={gradient}
@@ -43,12 +45,7 @@ const AdminDashboard = () => {
     <ScrollView 
       style={[styles.container, { backgroundColor: colors.bg }]}
       contentContainerStyle={styles.content}
-    >
-      <Text style={[styles.header, { color: colors.text }]}>Admin Dashboard</Text>
-      <Text style={[styles.subheader, { color: colors.textDim }]}>
-        Manage your institution efficiently
-      </Text>
-      
+    >     
       <View style={styles.grid}>
         {adminActions.map((action, index) => (
           <ActionCard key={action.id} {...action} index={index} />
