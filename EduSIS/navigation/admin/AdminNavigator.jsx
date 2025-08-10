@@ -5,7 +5,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import AdminDashboard from '../../components/AdminDashboard';
 
 // Shared beautiful sidebar
-import Sidebar from '../../components/Sidebar';
+import Sidebar from '../../components/layout/Sidebar';
 
 const Drawer = createDrawerNavigator();
 

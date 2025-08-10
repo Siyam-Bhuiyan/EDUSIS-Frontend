@@ -10,7 +10,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
-import { useTheme } from "../theme/ThemeProvider";
+import { useTheme } from "../../theme/ThemeProvider";
 
 /**
  * Sidebar (Drawer content)
@@ -57,7 +57,7 @@ export default function Sidebar({
         style={styles.header}
       >
         <View style={styles.brandRow}>
-          <Image source={require("../assets/logo.jpg")} style={styles.logo} />
+          <Image source={require("../../assets/logo.jpg")} style={styles.logo} />
           <View style={{ flex: 1 }}>
             <Text style={styles.appName}>EDUSIS</Text>
             <Text style={styles.appTag}>All-in-one University</Text>

@@ -10,7 +10,7 @@ import Calendar from "../../components/student/Calendar";
 import Profile from "../../components/student/Profile";
 
 // Shared UI
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../../components/layout/Sidebar";
 import AppShell from "../../components/layout/AppShell";
 
 const Drawer = createDrawerNavigator();

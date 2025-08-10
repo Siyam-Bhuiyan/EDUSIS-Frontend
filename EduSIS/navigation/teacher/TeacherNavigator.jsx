@@ -10,9 +10,11 @@ import OnlineClasses from '../../components/teacher/OnlineClasses';
 import Assignments from '../../components/teacher/Assignments';
 import Calendar from '../../components/teacher/Calendar';
 import Profile from '../../components/teacher/Profile';
+import AssignGrades from '../../components/teacher/AssignGrades';
+import Messages from '../../components/teacher/Messages';
 
 // Shared UI
-import Sidebar from '../../components/Sidebar';
+import Sidebar from '../../components/layout/Sidebar';
 import AppShell from '../../components/layout/AppShell';
 
 const Drawer = createDrawerNavigator();
@@ -34,7 +36,9 @@ export default function TeacherNavigator() {
     { id: 1, title: 'Announcements', icon: 'campaign', screen: 'Announcements' },
     { id: 2, title: 'Online Classes', icon: 'videocam', screen: 'OnlineClasses' },
     { id: 3, title: 'Assignments', icon: 'assignment', screen: 'Assignments' },
-    { id: 4, title: 'Calendar', icon: 'event', screen: 'Calendar' },
+    { id: 4, title: 'Assign Grades', icon: 'grade', screen: 'AssignGrades' },
+    { id: 5, title: 'Messages', icon: 'message', screen: 'Messages' },
+    { id: 6, title: 'Calendar', icon: 'event', screen: 'Calendar' },
   ];
 
   const footerActions = [
@@ -120,6 +124,32 @@ export default function TeacherNavigator() {
           ),
         }}
       />
+      <Drawer.Screen 
+        name="AssignGrades" 
+        component={withShell(AssignGrades, {
+          title: "Assign Grades",
+          subtitle: "Manage Student Grades"
+        })}        
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="grade" size={size} color={color} />
+          ),
+        }}
+      />
+
+      <Drawer.Screen 
+        name="Messages" 
+        component={withShell(Messages, {
+          title: "Messages",
+          subtitle: "Chat with Students"
+        })}        
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="message" size={size} color={color} />
+          ),
+        }}
+      />
+
       <Drawer.Screen 
         name="Profile" 
         component={withShell(Profile, {
