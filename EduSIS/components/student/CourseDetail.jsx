@@ -55,4 +55,63 @@ export default function TeacherCourseDetail({ route }) {
     setFormData({});
   };
 
-  
+  const renderMaterialItem = ({ item }) => (
+    <TouchableOpacity 
+      style={[styles.materialCard, { backgroundColor: colors.cardBg }]}
+      activeOpacity={0.7}
+    >
+      <MaterialIcons 
+        name={item.type === 'pdf' ? 'picture-as-pdf' : 'description'} 
+        size={24} 
+        color={colors.primary} 
+      />
+      <View style={styles.materialInfo}>
+        <Text style={[styles.materialTitle, { color: colors.text }]} numberOfLines={1}>
+          {item.title}
+        </Text>
+        <Text style={[styles.materialMeta, { color: colors.textLight }]}>
+          {item.size} • {item.downloads} downloads
+        </Text>
+      </View>
+      <MaterialIcons name="more-vert" size={24} color={colors.primary} />
+    </TouchableOpacity>
+  );
+
+  const renderAssignmentItem = ({ item }) => (
+    <TouchableOpacity 
+      style={[styles.assignmentCard, { backgroundColor: colors.cardBg }]}
+      activeOpacity={0.7}
+    >
+      <View style={styles.assignmentHeader}>
+        <Text style={[styles.assignmentTitle, { color: colors.text }]}>{item.title}</Text>
+        <View style={styles.submissionInfo}>
+          <MaterialIcons name="assignment-turned-in" size={16} color={colors.primary} />
+          <Text style={[styles.submissionText, { color: colors.textLight }]}>
+            {item.submissions}/{item.totalStudents}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.assignmentFooter}>
+        <Text style={[styles.dueDate, { color: colors.textLight }]}>
+          Due: {item.dueDate}
+        </Text>
+        <TouchableOpacity style={styles.viewButton}>
+          <Text style={styles.viewButtonText}>View Submissions</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const renderAnnouncementItem = ({ item }) => (
+    <View style={[styles.announcementCard, { backgroundColor: colors.cardBg }]}>
+      <View style={styles.announcementHeader}>
+        <Text style={[styles.announcementTitle, { color: colors.text }]}>{item.title}</Text>
+        <MaterialIcons name="edit" size={20} color={colors.primary} />
+      </View>
+      <Text style={[styles.announcementDate, { color: colors.textLight }]}>{item.date}</Text>
+      <Text style={[styles.announcementContent, { color: colors.text }]} numberOfLines={2}>
+        {item.content}
+      </Text>
+    </View>
+  );
+
