@@ -175,4 +175,79 @@ export default function TeacherCourseDetail({ route }) {
     </Modal>
   );
 
-  
+  return (
+    <View style={[styles.container, { backgroundColor: colors.bg }]}>
+      <LinearGradient
+        colors={[colors.primary, colors.bg]}
+        style={styles.header}
+      >
+        <View style={styles.courseInfo}>
+          <View style={styles.courseHeader}>
+            <Text style={styles.courseId}>{courseID}</Text>
+            <View style={styles.studentsInfo}>
+              <MaterialIcons name="people" size={20} color="#fff" />
+              <Text style={styles.studentsCount}>{students} Students</Text>
+            </View>
+          </View>
+          <Text style={styles.courseTitle}>{courseTitle}</Text>
+          <Text style={styles.section}>{section}</Text>
+        </View>
+      </LinearGradient>
+
+      <View style={styles.tabs}>
+        {['materials', 'assignments', 'announcements'].map((tab) => (
+          <TouchableOpacity
+            key={tab}
+            style={[styles.tab, activeTab === tab && styles.activeTab]}
+            onPress={() => setActiveTab(tab)}
+          >
+            <Text style={[styles.tabText, 
+              activeTab === tab ? 
+                { color: colors.primary, fontWeight: '700' } : 
+                { color: colors.textLight }
+            ]}>
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {activeTab === 'materials' && (
+        <FlatList
+          data={materials}
+          renderItem={renderMaterialItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+      {activeTab === 'assignments' && (
+        <FlatList
+          data={assignments}
+          renderItem={renderAssignmentItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+      {activeTab === 'announcements' && (
+        <FlatList
+          data={announcements}
+          renderItem={renderAnnouncementItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+
+      <TouchableOpacity
+        style={[styles.fab, { backgroundColor: colors.primary }]}
+        onPress={() => handleAdd(activeTab.slice(0, -1))}
+      >
+        <MaterialIcons name="add" size={24} color="#fff" />
+      </TouchableOpacity>
+
+      {renderModal()}
+    </View>
+  );
+}
