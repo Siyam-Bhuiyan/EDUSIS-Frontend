@@ -115,3 +115,64 @@ export default function TeacherCourseDetail({ route }) {
     </View>
   );
 
+  const renderModal = () => (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => setModalVisible(false)}
+    >
+      <View style={styles.modalContainer}>
+        <View style={[styles.modalContent, { backgroundColor: colors.cardBg }]}>
+          <View style={styles.modalHeader}>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>
+              Add New {modalType.charAt(0).toUpperCase() + modalType.slice(1)}
+            </Text>
+            <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <MaterialIcons name="close" size={24} color={colors.text} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Dynamic form fields based on modalType */}
+          <View style={styles.formContainer}>
+            <TextInput
+              style={[styles.input, { backgroundColor: colors.bg, color: colors.text }]}
+              placeholder="Title"
+              placeholderTextColor={colors.textLight}
+              value={formData.title}
+              onChangeText={(text) => setFormData({ ...formData, title: text })}
+            />
+            {modalType === 'assignment' && (
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.bg, color: colors.text }]}
+                placeholder="Due Date"
+                placeholderTextColor={colors.textLight}
+                value={formData.dueDate}
+                onChangeText={(text) => setFormData({ ...formData, dueDate: text })}
+              />
+            )}
+            {modalType === 'announcement' && (
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.bg, color: colors.text }]}
+                placeholder="Content"
+                placeholderTextColor={colors.textLight}
+                multiline
+                numberOfLines={4}
+                value={formData.content}
+                onChangeText={(text) => setFormData({ ...formData, content: text })}
+              />
+            )}
+          </View>
+
+          <TouchableOpacity 
+            style={[styles.submitButton, { backgroundColor: colors.primary }]}
+            onPress={handleSubmit}
+          >
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+
+  
