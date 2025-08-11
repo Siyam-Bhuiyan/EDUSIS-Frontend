@@ -251,3 +251,152 @@ export default function TeacherCourseDetail({ route }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    paddingTop: 60,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  courseInfo: {
+    marginTop: 10,
+  },
+  courseHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  courseId: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  studentsInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  studentsCount: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  courseTitle: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 8,
+  },
+  section: {
+    color: '#fff',
+    fontSize: 14,
+    marginTop: 4,
+  },
+  tabs: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  activeTab: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#1e90ff',
+  },
+  tabText: {
+    color: '#666',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  activeTabText: {
+    color: '#1e90ff',
+  },
+  content: {
+    flex: 1,
+  },
+  listContainer: {
+    padding: 16,
+  },
+  materialCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    marginBottom: 12,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  materialInfo: {
+    flex: 1,
+    marginHorizontal: 12,
+  },
+  materialTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  materialMeta: {
+    fontSize: 12,
+    marginTop: 4,
+  },
+  assignmentCard: {
+    padding: 16,
+    marginBottom: 12,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  assignmentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  assignmentTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    flex: 1,
+  },
+  submissionInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  submissionText: {
+    fontSize: 12,
+  },
+  assignmentFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  dueDate: {
+    fontSize: 12,
+  },
+  viewButton: {
+    backgroundColor: '#1e90ff',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  viewButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+});
