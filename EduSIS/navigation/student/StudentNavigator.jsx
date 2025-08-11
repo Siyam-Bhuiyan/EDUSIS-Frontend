@@ -8,6 +8,8 @@ import Messages from "../../components/student/Messages";
 import Results from "../../components/student/Results";
 import Calendar from "../../components/student/Calendar";
 import Profile from "../../components/student/Profile";
+import CourseDetail from "../../components/student/CourseDetail";
+
 
 // Shared UI
 import Sidebar from "../../components/layout/Sidebar";
@@ -108,6 +110,13 @@ export default function StudentNavigator() {
         component={withShell(Profile, {
           title: "Student",
           subtitle: "Profile",
+        })}
+      />
+      <Drawer.Screen
+        name="CourseDetail"
+        component={withShell(CourseDetail, {
+          title: "Course Details",
+          subtitle: "Course Materials & Activities"
         })}
       />
     </Drawer.Navigator>

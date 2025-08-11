@@ -12,6 +12,8 @@ import Calendar from '../../components/teacher/Calendar';
 import Profile from '../../components/teacher/Profile';
 import AssignGrades from '../../components/teacher/AssignGrades';
 import Messages from '../../components/teacher/Messages';
+import JitsiMeetingScreen from "../../components/teacher/JitsiMeetingScreen";
+import TeacherCourseDetail from "../../components/teacher/TeacherCourseDetail";
 
 // Shared UI
 import Sidebar from '../../components/layout/Sidebar';
@@ -159,6 +161,31 @@ export default function TeacherNavigator() {
         options={{
           drawerIcon: ({ color, size }) => (
             <MaterialIcons name="person" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="JitsiMeetingScreen"
+        component={withShell(JitsiMeetingScreen, {
+          title: "Jitsi Meeting",
+          subtitle: "Virtual Classroom"
+        })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="videocam" size={size} color={color} />
+          ),
+        }}  
+      />
+
+      <Drawer.Screen
+        name="TeacherCourseDetail"
+        component={withShell(TeacherCourseDetail, {
+          title: "Course Details",
+          subtitle: "Manage Course Content"
+        })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="school" size={size} color={color} />
           ),
         }}
       />

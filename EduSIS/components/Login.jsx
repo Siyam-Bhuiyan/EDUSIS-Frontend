@@ -19,12 +19,11 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    if (!role || !email || !password) {
+    if (!role) {
       Alert.alert("Error", "All fields are required.");
       return;
     }
 
-    // use navigate so Android back goes back to Login
     if (role === "student") navigation.navigate("StudentApp");
     else if (role === "teacher") navigation.navigate("TeacherApp");
     else if (role === "admin") navigation.navigate("AdminApp");
@@ -36,30 +35,39 @@ const Login = ({ navigation }) => {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      {/* Artistic background shapes */}
+      <View style={styles.artShape1} />
+      <View style={styles.artShape2} />
+
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.wrapper}>
-          <View style={styles.logoWrap}>
-            <Image source={require("../assets/logo.jpg")} style={styles.logo} />
+          <View style={styles.logoContainer}>
+            <View style={styles.logoWrapper}>
+              <Image source={require("../assets/logo.jpg")} style={styles.logo} />
+            </View>
           </View>
+          
           <Text style={styles.title}>Welcome</Text>
-          <Text style={styles.subtitle}>Login to EDUCONNECT</Text>
+          <Text style={styles.subtitle}>Login to EDUSIS</Text>
 
           <View style={styles.form}>
-            <Picker
-              selectedValue={role}
-              onValueChange={(v) => setRole(v)}
-              style={styles.picker}
-            >
-              <Picker.Item label="Select Role" value="" />
-              <Picker.Item label="Admin" value="admin" />
-              <Picker.Item label="Student" value="student" />
-              <Picker.Item label="Teacher" value="teacher" />
-            </Picker>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={role}
+                onValueChange={(v) => setRole(v)}
+                style={styles.picker}
+              >
+                <Picker.Item label="Select Role" value="" />
+                <Picker.Item label="Admin" value="admin" />
+                <Picker.Item label="Student" value="student" />
+                <Picker.Item label="Teacher" value="teacher" />
+              </Picker>
+            </View>
 
             <TextInput
               style={styles.input}
               placeholder="Email"
-              placeholderTextColor="#999"
+              placeholderTextColor="rgba(255,255,255,0.6)"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -69,7 +77,7 @@ const Login = ({ navigation }) => {
             <TextInput
               style={styles.input}
               placeholder="Password"
-              placeholderTextColor="#999"
+              placeholderTextColor="rgba(255,255,255,0.6)"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -85,7 +93,7 @@ const Login = ({ navigation }) => {
               style={styles.registerLink}
             >
               <Text style={styles.registerText}>
-                Don’t have an account?{" "}
+                Don't have an account?{" "}
                 <Text style={styles.registerBold}>Register</Text>
               </Text>
             </TouchableOpacity>
@@ -96,58 +104,124 @@ const Login = ({ navigation }) => {
   );
 };
 
-export default Login;
-
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f7fa" },
-  scroll: { flexGrow: 1, justifyContent: "center", padding: 24 },
-  wrapper: { alignItems: "center" },
-  logoWrap: {
-    alignItems: "center",
-    marginBottom: 10,
+  container: {
+    flex: 1,
+    backgroundColor: '#1a1a2e',
+  },
+  
+  artShape1: {
+    position: 'absolute',
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+    top: -50,
+    right: -50,
+  },
+  artShape2: {
+    position: 'absolute',
+    width: 150,
+    height: 150,
+    borderRadius: 20,
+    backgroundColor: 'rgba(78, 205, 196, 0.08)',
+    bottom: -30,
+    left: -30,
+  },
+
+  scroll: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    padding: 24,
+  },
+  wrapper: {
+    alignItems: 'center',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  logoWrapper: {
+    padding: 15,
+    borderRadius: 60,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    shadowColor: '#fff',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+    elevation: 10,
   },
   logo: {
-    width: 70,
-    height: 70,
-    borderRadius: 16,
-    marginBottom: 6,
-    shadowColor: "#000",
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 6,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
-  title: { fontSize: 28, fontWeight: "700", color: "#2c3e50", marginBottom: 8 },
-  subtitle: { fontSize: 16, color: "#7f8c8d", marginBottom: 24 },
-  form: { width: "100%", gap: 16 },
-  picker: {
+  title: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#ffffff',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.7)',
+    marginBottom: 32,
+    textAlign: 'center',
+  },
+  form: {
+    width: '100%',
+    gap: 16,
+  },
+  pickerContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    backgroundColor: "#fff",
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  picker: {
     height: 50,
-    paddingHorizontal: 10,
-    color: "#333",
+    color: '#ffffff',
   },
   input: {
     height: 50,
-    backgroundColor: "#fff",
-    borderRadius: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 12,
     paddingHorizontal: 15,
-    borderColor: "#ddd",
     borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
     fontSize: 16,
-    color: "#333",
+    color: '#ffffff',
   },
   button: {
-    backgroundColor: "#3498db",
+    backgroundColor: '#45B7D1',
     paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
+    borderRadius: 12,
+    alignItems: 'center',
     marginTop: 10,
-    elevation: 3,
+    elevation: 5,
+    shadowColor: '#45B7D1',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
-  buttonText: { color: "#fff", fontWeight: "600", fontSize: 16 },
-  registerLink: { marginTop: 15, alignItems: "center" },
-  registerText: { color: "#7f8c8d", fontSize: 14 },
-  registerBold: { fontWeight: "700", color: "#3498db" },
+  buttonText: {
+    color: '#ffffff',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  registerLink: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  registerText: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 14,
+  },
+  registerBold: {
+    fontWeight: '700',
+    color: '#4ECDC4',
+  },
 });
+
+export default Login;

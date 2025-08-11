@@ -1,0 +1,487 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  Modal,
+  TextInput,
+  Dimensions,
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useTheme } from '../../theme/ThemeProvider';
+
+const { width } = Dimensions.get('window');
+
+export default function TeacherCourseDetail({ route }) {
+  const { colors, isDark } = useTheme();
+  const [activeTab, setActiveTab] = useState('materials');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalType, setModalType] = useState('');
+  const [formData, setFormData] = useState({});
+  
+  const { courseTitle, section, courseID, students } = route.params;
+
+  // Dummy data for demonstration
+  const materials = [
+    { id: 1, title: 'Lecture Notes Week 1', type: 'pdf', size: '2.3 MB', downloads: 45 },
+    { id: 2, title: 'Course Syllabus', type: 'doc', size: '1.1 MB', downloads: 60 },
+    { id: 3, title: 'Practice Problems', type: 'pdf', size: '3.5 MB', downloads: 38 },
+  ];
+
+  const assignments = [
+    { id: 1, title: 'Assignment 1', dueDate: '2024-01-25', submissions: 28, totalStudents: 35 },
+    { id: 2, title: 'Assignment 2', dueDate: '2024-02-01', submissions: 20, totalStudents: 35 },
+    { id: 3, title: 'Mid-term Project', dueDate: '2024-02-15', submissions: 35, totalStudents: 35 },
+  ];
+
+  const announcements = [
+    { id: 1, title: 'Class Cancelled Tomorrow', date: '2024-01-14', content: 'Due to maintenance...' },
+    { id: 2, title: 'Extra Office Hours', date: '2024-01-13', content: 'Additional office hours...' },
+  ];
+
+  const handleAdd = (type) => {
+    setModalType(type);
+    setFormData({});
+    setModalVisible(true);
+  };
+
+  const handleSubmit = () => {
+    // Handle form submission based on modalType
+    setModalVisible(false);
+    setFormData({});
+  };
+
+  const renderMaterialItem = ({ item }) => (
+    <TouchableOpacity 
+      style={[styles.materialCard, { backgroundColor: colors.cardBg }]}
+      activeOpacity={0.7}
+    >
+      <MaterialIcons 
+        name={item.type === 'pdf' ? 'picture-as-pdf' : 'description'} 
+        size={24} 
+        color={colors.primary} 
+      />
+      <View style={styles.materialInfo}>
+        <Text style={[styles.materialTitle, { color: colors.text }]} numberOfLines={1}>
+          {item.title}
+        </Text>
+        <Text style={[styles.materialMeta, { color: colors.textLight }]}>
+          {item.size} • {item.downloads} downloads
+        </Text>
+      </View>
+      <MaterialIcons name="more-vert" size={24} color={colors.primary} />
+    </TouchableOpacity>
+  );
+
+  const renderAssignmentItem = ({ item }) => (
+    <TouchableOpacity 
+      style={[styles.assignmentCard, { backgroundColor: colors.cardBg }]}
+      activeOpacity={0.7}
+    >
+      <View style={styles.assignmentHeader}>
+        <Text style={[styles.assignmentTitle, { color: colors.text }]}>{item.title}</Text>
+        <View style={styles.submissionInfo}>
+          <MaterialIcons name="assignment-turned-in" size={16} color={colors.primary} />
+          <Text style={[styles.submissionText, { color: colors.textLight }]}>
+            {item.submissions}/{item.totalStudents}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.assignmentFooter}>
+        <Text style={[styles.dueDate, { color: colors.textLight }]}>
+          Due: {item.dueDate}
+        </Text>
+        <TouchableOpacity style={styles.viewButton}>
+          <Text style={styles.viewButtonText}>View Submissions</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const renderAnnouncementItem = ({ item }) => (
+    <View style={[styles.announcementCard, { backgroundColor: colors.cardBg }]}>
+      <View style={styles.announcementHeader}>
+        <Text style={[styles.announcementTitle, { color: colors.text }]}>{item.title}</Text>
+        <MaterialIcons name="edit" size={20} color={colors.primary} />
+      </View>
+      <Text style={[styles.announcementDate, { color: colors.textLight }]}>{item.date}</Text>
+      <Text style={[styles.announcementContent, { color: colors.text }]} numberOfLines={2}>
+        {item.content}
+      </Text>
+    </View>
+  );
+
+  const renderModal = () => (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => setModalVisible(false)}
+    >
+      <View style={styles.modalContainer}>
+        <View style={[styles.modalContent, { backgroundColor: colors.cardBg }]}>
+          <View style={styles.modalHeader}>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>
+              Add New {modalType.charAt(0).toUpperCase() + modalType.slice(1)}
+            </Text>
+            <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <MaterialIcons name="close" size={24} color={colors.text} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Dynamic form fields based on modalType */}
+          <View style={styles.formContainer}>
+            <TextInput
+              style={[styles.input, { backgroundColor: colors.bg, color: colors.text }]}
+              placeholder="Title"
+              placeholderTextColor={colors.textLight}
+              value={formData.title}
+              onChangeText={(text) => setFormData({ ...formData, title: text })}
+            />
+            {modalType === 'assignment' && (
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.bg, color: colors.text }]}
+                placeholder="Due Date"
+                placeholderTextColor={colors.textLight}
+                value={formData.dueDate}
+                onChangeText={(text) => setFormData({ ...formData, dueDate: text })}
+              />
+            )}
+            {modalType === 'announcement' && (
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.bg, color: colors.text }]}
+                placeholder="Content"
+                placeholderTextColor={colors.textLight}
+                multiline
+                numberOfLines={4}
+                value={formData.content}
+                onChangeText={(text) => setFormData({ ...formData, content: text })}
+              />
+            )}
+          </View>
+
+          <TouchableOpacity 
+            style={[styles.submitButton, { backgroundColor: colors.primary }]}
+            onPress={handleSubmit}
+          >
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+
+  return (
+    <View style={[styles.container, { backgroundColor: colors.bg }]}>
+      <LinearGradient
+        colors={[colors.primary, colors.bg]}
+        style={styles.header}
+      >
+        <View style={styles.courseInfo}>
+          <View style={styles.courseHeader}>
+            <Text style={styles.courseId}>{courseID}</Text>
+            <View style={styles.studentsInfo}>
+              <MaterialIcons name="people" size={20} color="#fff" />
+              <Text style={styles.studentsCount}>{students} Students</Text>
+            </View>
+          </View>
+          <Text style={styles.courseTitle}>{courseTitle}</Text>
+          <Text style={styles.section}>{section}</Text>
+        </View>
+      </LinearGradient>
+
+      <View style={styles.tabs}>
+        {['materials', 'assignments', 'announcements'].map((tab) => (
+          <TouchableOpacity
+            key={tab}
+            style={[styles.tab, activeTab === tab && styles.activeTab]}
+            onPress={() => setActiveTab(tab)}
+          >
+            <Text style={[styles.tabText, 
+              activeTab === tab ? 
+                { color: colors.primary, fontWeight: '700' } : 
+                { color: colors.textLight }
+            ]}>
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {activeTab === 'materials' && (
+        <FlatList
+          data={materials}
+          renderItem={renderMaterialItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+      {activeTab === 'assignments' && (
+        <FlatList
+          data={assignments}
+          renderItem={renderAssignmentItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+      {activeTab === 'announcements' && (
+        <FlatList
+          data={announcements}
+          renderItem={renderAnnouncementItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+
+      <TouchableOpacity
+        style={[styles.fab, { backgroundColor: colors.primary }]}
+        onPress={() => handleAdd(activeTab.slice(0, -1))}
+      >
+        <MaterialIcons name="add" size={24} color="#fff" />
+      </TouchableOpacity>
+
+      {renderModal()}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    paddingTop: 60,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  courseInfo: {
+    marginTop: 10,
+  },
+  courseHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  courseId: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  studentsInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  studentsCount: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  courseTitle: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 8,
+  },
+  section: {
+    color: '#fff',
+    fontSize: 14,
+    marginTop: 4,
+  },
+  tabs: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  activeTab: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#1e90ff',
+  },
+  tabText: {
+    color: '#666',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  activeTabText: {
+    color: '#1e90ff',
+  },
+  content: {
+    flex: 1,
+  },
+  listContainer: {
+    padding: 16,
+  },
+  materialCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    marginBottom: 12,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  materialInfo: {
+    flex: 1,
+    marginHorizontal: 12,
+  },
+  materialTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  materialMeta: {
+    fontSize: 12,
+    marginTop: 4,
+  },
+  assignmentCard: {
+    padding: 16,
+    marginBottom: 12,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  assignmentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  assignmentTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    flex: 1,
+  },
+  submissionInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  submissionText: {
+    fontSize: 12,
+  },
+  assignmentFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  dueDate: {
+    fontSize: 12,
+  },
+  viewButton: {
+    backgroundColor: '#1e90ff',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  viewButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  announcementCard: {
+    padding: 16,
+    marginBottom: 12,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  announcementHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  announcementTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    flex: 1,
+  },
+  announcementDate: {
+    fontSize: 12,
+    marginTop: 4,
+  },
+  announcementContent: {
+    fontSize: 14,
+    marginTop: 8,
+    lineHeight: 20,
+  },
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: width - 40,
+    borderRadius: 16,
+    padding: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  formContainer: {
+    gap: 12,
+  },
+  input: {
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: 16,
+  },
+  submitButton: {
+    marginTop: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});

@@ -25,7 +25,6 @@ const Register = ({ navigation }) => {
       return;
     }
 
-    // TODO: Connect to API
     Alert.alert("Success", "Registration successful!");
     navigation.navigate("Login");
   };
@@ -35,30 +34,39 @@ const Register = ({ navigation }) => {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      {/* Artistic background shapes */}
+      <View style={styles.artShape1} />
+      <View style={styles.artShape2} />
+
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.wrapper}>
-          <View style={styles.logoWrap}>
-            <Image source={require("../assets/logo.jpg")} style={styles.logo} />
+          <View style={styles.logoContainer}>
+            <View style={styles.logoWrapper}>
+              <Image source={require("../assets/logo.jpg")} style={styles.logo} />
+            </View>
           </View>
+          
           <Text style={styles.title}>Create Account</Text>
-          <Text style={styles.subtitle}>Join EDUCONNECT today</Text>
+          <Text style={styles.subtitle}>Join EDUSIS today</Text>
 
           <View style={styles.form}>
-            <Picker
-              selectedValue={role}
-              onValueChange={(itemValue) => setRole(itemValue)}
-              style={styles.picker}
-            >
-              <Picker.Item label="Select Role" value="" />
-              <Picker.Item label="Admin" value="admin" />
-              <Picker.Item label="Student" value="student" />
-              <Picker.Item label="Teacher" value="teacher" />
-            </Picker>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={role}
+                onValueChange={(itemValue) => setRole(itemValue)}
+                style={styles.picker}
+              >
+                <Picker.Item label="Select Role" value="" />
+                <Picker.Item label="Admin" value="admin" />
+                <Picker.Item label="Student" value="student" />
+                <Picker.Item label="Teacher" value="teacher" />
+              </Picker>
+            </View>
 
             <TextInput
               style={styles.input}
               placeholder="Full Name"
-              placeholderTextColor="#999"
+              placeholderTextColor="rgba(255,255,255,0.6)"
               value={name}
               onChangeText={setName}
             />
@@ -66,7 +74,7 @@ const Register = ({ navigation }) => {
             <TextInput
               style={styles.input}
               placeholder="Email"
-              placeholderTextColor="#999"
+              placeholderTextColor="rgba(255,255,255,0.6)"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -76,7 +84,7 @@ const Register = ({ navigation }) => {
             <TextInput
               style={styles.input}
               placeholder="Password"
-              placeholderTextColor="#999"
+              placeholderTextColor="rgba(255,255,255,0.6)"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -103,92 +111,125 @@ const Register = ({ navigation }) => {
   );
 };
 
-export default Register;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f7fa",
+    backgroundColor: '#1a1a2e',
   },
+  
+  // Artistic background shapes
+  artShape1: {
+    position: 'absolute',
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    backgroundColor: 'rgba(150, 206, 180, 0.12)',
+    top: -40,
+    left: -40,
+  },
+  artShape2: {
+    position: 'absolute',
+    width: 160,
+    height: 160,
+    borderRadius: 25,
+    backgroundColor: 'rgba(254, 202, 87, 0.1)',
+    bottom: -20,
+    right: -20,
+  },
+
   scroll: {
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     padding: 24,
   },
   wrapper: {
-    alignItems: "center",
+    alignItems: 'center',
   },
-  logoWrap: {
-    alignItems: "center",
-    marginBottom: 10,
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  logoWrapper: {
+    padding: 15,
+    borderRadius: 60,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    shadowColor: '#fff',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+    elevation: 10,
   },
   logo: {
-    width: 70,
-    height: 70,
-    borderRadius: 16,
-    marginBottom: 6,
-    shadowColor: "#000",
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 6,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#2c3e50",
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#ffffff',
     marginBottom: 8,
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: "#7f8c8d",
-    marginBottom: 24,
+    color: 'rgba(255, 255, 255, 0.7)',
+    marginBottom: 32,
+    textAlign: 'center',
   },
   form: {
-    width: "100%",
+    width: '100%',
     gap: 16,
   },
-  picker: {
+  pickerContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    backgroundColor: "#fff",
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  picker: {
     height: 50,
-    paddingHorizontal: 10,
-    color: "#333",
+    color: '#ffffff',
   },
   input: {
     height: 50,
-    backgroundColor: "#fff",
-    borderRadius: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 12,
     paddingHorizontal: 15,
-    borderColor: "#ddd",
     borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
     fontSize: 16,
-    color: "#333",
+    color: '#ffffff',
   },
   button: {
-    backgroundColor: "#2ecc71",
+    backgroundColor: '#96CEB4',
     paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
+    borderRadius: 12,
+    alignItems: 'center',
     marginTop: 10,
-    elevation: 3,
+    elevation: 5,
+    shadowColor: '#96CEB4',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "600",
+    color: '#ffffff',
+    fontWeight: '700',
     fontSize: 16,
   },
   loginLink: {
-    marginTop: 15,
-    alignItems: "center",
+    marginTop: 20,
+    alignItems: 'center',
   },
   loginText: {
-    color: "#7f8c8d",
+    color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 14,
   },
   loginBold: {
-    fontWeight: "700",
-    color: "#2ecc71",
+    fontWeight: '700',
+    color: '#FF6B6B',
   },
 });
+
+export default Register;
