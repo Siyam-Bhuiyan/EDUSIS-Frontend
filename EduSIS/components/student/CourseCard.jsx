@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from '@react-navigation/native';
 
 export default function CourseCard({
   courseID,
@@ -16,15 +17,25 @@ export default function CourseCard({
   teacherName,
   section = "Section 1",
   coverUri,
-  teacherAvatarUri,  
-  onPress,
+  teacherAvatarUri
 }) {
+  const navigation = useNavigation();
   const src = coverUri
     ? { uri: coverUri }
     : { uri: "https://images.unsplash.com/photo-1517433456452-f9633a875f6f?w=1200&q=60" };
 
   return (
-    <TouchableOpacity activeOpacity={0.9} style={styles.card} onPress={onPress}>
+    <TouchableOpacity 
+      activeOpacity={0.9} 
+      style={styles.card} 
+      onPress={() => navigation.navigate('CourseDetail', {
+        courseID,
+        courseTitle,
+        teacherName,
+        teacherAvatarUri,
+        section
+      })}
+    >
       <ImageBackground source={src} style={styles.cover} imageStyle={styles.coverImg}>
         <LinearGradient
           colors={["rgba(0,0,0,0.05)", "rgba(0,0,0,0.55)"]}
