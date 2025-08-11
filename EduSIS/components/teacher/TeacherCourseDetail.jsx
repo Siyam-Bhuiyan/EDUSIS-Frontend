@@ -167,3 +167,54 @@ export default function CourseDetail({ route }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    paddingTop: 60,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  courseInfo: {
+    marginTop: 10,
+  },
+  courseHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  courseId: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  courseTitle: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 8,
+  },
+  teacherInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  teacherAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    marginRight: 8,
+  },
+  teacherName: {
+    color: '#fff',
+    fontSize: 14,
+  },
+
+  announcementContent: {
+    fontSize: 14,
+    marginTop: 8,
+    lineHeight: 20,
+  },
+});
