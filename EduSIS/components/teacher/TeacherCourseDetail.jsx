@@ -99,3 +99,211 @@ export default function CourseDetail({ route }) {
       default: return 'rgba(128, 128, 128, 0.2)';
     }
   };
+
+  return (
+    <View style={[styles.container, { backgroundColor: colors.bg }]}>
+      <LinearGradient
+        colors={[colors.primary, colors.bg]}
+        style={styles.header}
+      >
+        <View style={styles.courseInfo}>
+          <View style={styles.courseHeader}>
+            <Text style={styles.courseId}>{courseID}</Text>
+            <MaterialIcons name="bookmark-border" size={24} color="#fff" />
+          </View>
+          <Text style={styles.courseTitle}>{courseTitle}</Text>
+          <View style={styles.teacherInfo}>
+            {teacherAvatarUri && (
+              <Image
+                source={{ uri: teacherAvatarUri }}
+                style={styles.teacherAvatar}
+              />
+            )}
+            <Text style={styles.teacherName}>{teacherName}</Text>
+          </View>
+        </View>
+      </LinearGradient>
+
+      <View style={styles.tabs}>
+        {['materials', 'assignments', 'announcements'].map((tab) => (
+          <TouchableOpacity
+            key={tab}
+            style={[styles.tab, activeTab === tab && styles.activeTab]}
+            onPress={() => setActiveTab(tab)}
+          >
+            <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    paddingTop: 60,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  courseInfo: {
+    marginTop: 10,
+  },
+  courseHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  courseId: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  courseTitle: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 8,
+  },
+  teacherInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  teacherAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    marginRight: 8,
+  },
+  teacherName: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  tabs: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  activeTab: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#1e90ff',
+  },
+  tabText: {
+    color: '#666',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  activeTabText: {
+    color: '#1e90ff',
+  },
+  content: {
+    flex: 1,
+  },
+  listContainer: {
+    padding: 16,
+  },
+  materialCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    marginBottom: 12,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  materialInfo: {
+    flex: 1,
+    marginHorizontal: 12,
+  },
+  materialTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  materialMeta: {
+    fontSize: 12,
+    marginTop: 4,
+  },
+  assignmentCard: {
+    padding: 16,
+    marginBottom: 12,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  assignmentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  assignmentTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    flex: 1,
+  },
+  statusChip: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginLeft: 8,
+  },
+  statusText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#1e90ff',
+  },
+  assignmentFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  dueDate: {
+    fontSize: 12,
+  },
+  grade: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  announcementCard: {
+    padding: 16,
+    marginBottom: 12,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  announcementTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  announcementDate: {
+    fontSize: 12,
+    marginTop: 4,
+  },
+  announcementContent: {
+    fontSize: 14,
+    marginTop: 8,
+    lineHeight: 20,
+  },
+});
