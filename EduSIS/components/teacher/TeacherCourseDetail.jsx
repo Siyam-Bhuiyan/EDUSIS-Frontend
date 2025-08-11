@@ -196,25 +196,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 8,
   },
-  teacherInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 12,
-  },
-  teacherAvatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    marginRight: 8,
-  },
-  teacherName: {
-    color: '#fff',
-    fontSize: 14,
-  },
-
-  announcementContent: {
-    fontSize: 14,
-    marginTop: 8,
-    lineHeight: 20,
-  },
 });
