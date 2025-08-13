@@ -15,7 +15,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "../../theme/ThemeProvider";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
-import { initClient, loadCalendarEvents, signInAndLoadEvents } from "../../utils/googleCalendarApi";
 
 const { width } = Dimensions.get("window");
 
@@ -37,8 +36,18 @@ const tagStyle = (tag) => {
 };
 
 const months = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -69,7 +78,7 @@ export default function Calendar() {
       setIsGoogleCalendarLinked(true);
       fetchGoogleEvents();
     } catch (error) {
-      console.error('Error initializing Google Calendar:', error);
+      console.error("Error initializing Google Calendar:", error);
     }
   };
 
@@ -77,20 +86,32 @@ export default function Calendar() {
     setLoading(true);
     try {
       const response = await loadCalendarEvents();
-      const googleEvents = response.result.items.map(event => ({
+      const googleEvents = response.result.items.map((event) => ({
         id: event.id,
         title: event.summary,
-        date: event.start.dateTime ? new Date(event.start.dateTime).toISOString().split('T')[0] : event.start.date,
-        time: event.start.dateTime ? new Date(event.start.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'All Day',
-        tag: event.description?.includes('Quiz') ? 'Quiz' :
-             event.description?.includes('Exam') ? 'Exam' :
-             event.description?.includes('Assignment') ? 'Assignment' :
-             event.description?.includes('Deadline') ? 'Deadline' : 'Meeting'
+        date: event.start.dateTime
+          ? new Date(event.start.dateTime).toISOString().split("T")[0]
+          : event.start.date,
+        time: event.start.dateTime
+          ? new Date(event.start.dateTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          : "All Day",
+        tag: event.description?.includes("Quiz")
+          ? "Quiz"
+          : event.description?.includes("Exam")
+          ? "Exam"
+          : event.description?.includes("Assignment")
+          ? "Assignment"
+          : event.description?.includes("Deadline")
+          ? "Deadline"
+          : "Meeting",
       }));
       setEvents(googleEvents);
     } catch (error) {
-      console.error('Error fetching Google Calendar events:', error);
-      Alert.alert('Error', 'Failed to fetch calendar events');
+      console.error("Error fetching Google Calendar events:", error);
+      Alert.alert("Error", "Failed to fetch calendar events");
     } finally {
       setLoading(false);
     }
@@ -102,8 +123,8 @@ export default function Calendar() {
       await signInAndLoadEvents();
       fetchGoogleEvents();
     } catch (error) {
-      console.error('Error syncing with Google Calendar:', error);
-      Alert.alert('Error', 'Failed to sync with Google Calendar');
+      console.error("Error syncing with Google Calendar:", error);
+      Alert.alert("Error", "Failed to sync with Google Calendar");
     } finally {
       setLoading(false);
     }
@@ -120,7 +141,9 @@ export default function Calendar() {
   const nextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
 
   const formatDate = (date) => {
-    return `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
+    return `${year}-${String(month + 1).padStart(2, "0")}-${String(
+      date
+    ).padStart(2, "0")}`;
   };
 
   const getEventsForDate = (date) => {
@@ -183,7 +206,9 @@ export default function Calendar() {
 
     for (let date = 1; date <= daysInMonth; date++) {
       const dayEvents = getEventsForDate(date);
-      const isToday = new Date().toDateString() === new Date(year, month, date).toDateString();
+      const isToday =
+        new Date().toDateString() ===
+        new Date(year, month, date).toDateString();
 
       days.push(
         <Animated.View
@@ -192,14 +217,23 @@ export default function Calendar() {
         >
           <TouchableOpacity
             onPress={() => handleDateClick(date)}
-            style={[styles.calendarDay, { width: cellWidth }, isToday && styles.today]}
+            style={[
+              styles.calendarDay,
+              { width: cellWidth },
+              isToday && styles.today,
+            ]}
           >
-            <Text style={[styles.dateText, isToday && styles.todayText]}>{date}</Text>
+            <Text style={[styles.dateText, isToday && styles.todayText]}>
+              {date}
+            </Text>
             <View style={styles.eventsContainer}>
               {dayEvents.slice(0, 2).map((event) => {
                 const t = tagStyle(event.tag);
                 return (
-                  <View key={event.id} style={[styles.eventDot, { backgroundColor: t.fg }]} />
+                  <View
+                    key={event.id}
+                    style={[styles.eventDot, { backgroundColor: t.fg }]}
+                  />
                 );
               })}
               {dayEvents.length > 2 && (
@@ -216,10 +250,7 @@ export default function Calendar() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
-      <LinearGradient
-        colors={[colors.cardBg, colors.bg]}
-        style={styles.header}
-      >
+      <LinearGradient colors={[colors.cardBg, colors.bg]} style={styles.header}>
         <View style={styles.titleContainer}>
           <MaterialIcons name="event" size={24} color="#1e90ff" />
           <Text style={[styles.title, { color: colors.text }]}>Calendar</Text>
@@ -266,7 +297,9 @@ export default function Calendar() {
                 <TouchableOpacity onPress={prevMonth} style={styles.navButton}>
                   <MaterialIcons name="chevron-left" size={24} color="#666" />
                 </TouchableOpacity>
-                <Text style={styles.monthYear}>{months[month]} {year}</Text>
+                <Text style={styles.monthYear}>
+                  {months[month]} {year}
+                </Text>
                 <TouchableOpacity onPress={nextMonth} style={styles.navButton}>
                   <MaterialIcons name="chevron-right" size={24} color="#666" />
                 </TouchableOpacity>
@@ -274,13 +307,21 @@ export default function Calendar() {
 
               <View style={styles.weekdayContainer}>
                 {weekdays.map((day) => (
-                  <View key={day} style={[styles.weekdayHeader, { width: (width - 32) / 7 }]}>
+                  <View
+                    key={day}
+                    style={[styles.weekdayHeader, { width: (width - 32) / 7 }]}
+                  >
                     <Text style={styles.weekdayText}>{day}</Text>
                   </View>
                 ))}
               </View>
 
-              <View style={[styles.calendarGrid, { backgroundColor: colors.cardBg }]}>
+              <View
+                style={[
+                  styles.calendarGrid,
+                  { backgroundColor: colors.cardBg },
+                ]}
+              >
                 {renderCalendar()}
               </View>
             </Animated.View>
@@ -290,14 +331,15 @@ export default function Calendar() {
               {events
                 .sort((a, b) => new Date(a.date) - new Date(b.date))
                 .map((event, index) => {
-                  const [mon, day] = event.date.split("-")[1] === "08"
-                    ? ["AUG", event.date.split("-")[2]]
-                    : [
-                        months[parseInt(event.date.split("-")[1]) - 1]
-                          .slice(0, 3)
-                          .toUpperCase(),
-                        event.date.split("-")[2],
-                      ];
+                  const [mon, day] =
+                    event.date.split("-")[1] === "08"
+                      ? ["AUG", event.date.split("-")[2]]
+                      : [
+                          months[parseInt(event.date.split("-")[1]) - 1]
+                            .slice(0, 3)
+                            .toUpperCase(),
+                          event.date.split("-")[2],
+                        ];
 
                   const t = tagStyle(event.tag);
 
@@ -307,7 +349,10 @@ export default function Calendar() {
                       key={event.id}
                     >
                       <TouchableOpacity
-                        style={[styles.eventCard, { backgroundColor: colors.cardBg }]}
+                        style={[
+                          styles.eventCard,
+                          { backgroundColor: colors.cardBg },
+                        ]}
                       >
                         <View style={styles.dateBox}>
                           <Text style={styles.month}>{mon}</Text>
@@ -315,13 +360,25 @@ export default function Calendar() {
                         </View>
 
                         <View style={styles.eventInfo}>
-                          <Text numberOfLines={1} style={[styles.eventTitle, { color: colors.text }]}>
+                          <Text
+                            numberOfLines={1}
+                            style={[styles.eventTitle, { color: colors.text }]}
+                          >
                             {event.title}
                           </Text>
                           <View style={styles.eventMeta}>
-                            <MaterialIcons name="schedule" size={14} color="#6b7280" />
+                            <MaterialIcons
+                              name="schedule"
+                              size={14}
+                              color="#6b7280"
+                            />
                             <Text style={styles.eventTime}>{event.time}</Text>
-                            <Text style={[styles.eventTag, { backgroundColor: t.bg, color: t.fg }]}>
+                            <Text
+                              style={[
+                                styles.eventTag,
+                                { backgroundColor: t.bg, color: t.fg },
+                              ]}
+                            >
                               {event.tag}
                             </Text>
                           </View>
@@ -331,7 +388,11 @@ export default function Calendar() {
                           onPress={() => deleteEvent(event.id)}
                           style={styles.deleteButton}
                         >
-                          <MaterialIcons name="close" size={20} color="#ef4444" />
+                          <MaterialIcons
+                            name="close"
+                            size={20}
+                            color="#ef4444"
+                          />
                         </TouchableOpacity>
                       </TouchableOpacity>
                     </Animated.View>
@@ -358,7 +419,8 @@ export default function Calendar() {
           >
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.text }]}>
-                Add Event - {selectedDate && `${months[month]} ${selectedDate}, ${year}`}
+                Add Event -{" "}
+                {selectedDate && `${months[month]} ${selectedDate}, ${year}`}
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -372,45 +434,71 @@ export default function Calendar() {
             </View>
 
             <View style={styles.formGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Event Title</Text>
+              <Text style={[styles.label, { color: colors.text }]}>
+                Event Title
+              </Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.bg, color: colors.text }]}
+                style={[
+                  styles.input,
+                  { backgroundColor: colors.bg, color: colors.text },
+                ]}
                 value={formData.title}
-                onChangeText={(text) => setFormData({ ...formData, title: text })}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, title: text })
+                }
                 placeholder="Enter event title"
                 placeholderTextColor="#999"
               />
             </View>
 
             <View style={styles.formGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Time (Optional)</Text>
+              <Text style={[styles.label, { color: colors.text }]}>
+                Time (Optional)
+              </Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.bg, color: colors.text }]}
+                style={[
+                  styles.input,
+                  { backgroundColor: colors.bg, color: colors.text },
+                ]}
                 value={formData.time}
-                onChangeText={(text) => setFormData({ ...formData, time: text })}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, time: text })
+                }
                 placeholder="e.g., 10:00 AM or All Day"
                 placeholderTextColor="#999"
               />
             </View>
 
             <View style={styles.formGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Category</Text>
+              <Text style={[styles.label, { color: colors.text }]}>
+                Category
+              </Text>
               <View style={styles.tagPicker}>
-                {["Assignment", "Quiz", "Exam", "Deadline", "Meeting"].map((tag) => {
-                  const t = tagStyle(tag);
-                  const isSelected = formData.tag === tag;
-                  return (
-                    <TouchableOpacity
-                      key={tag}
-                      onPress={() => setFormData({ ...formData, tag })}
-                      style={[styles.tagOption, { backgroundColor: isSelected ? t.fg : t.bg }]}
-                    >
-                      <Text style={[styles.tagOptionText, { color: isSelected ? "#fff" : t.fg }]}>
-                        {tag}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
+                {["Assignment", "Quiz", "Exam", "Deadline", "Meeting"].map(
+                  (tag) => {
+                    const t = tagStyle(tag);
+                    const isSelected = formData.tag === tag;
+                    return (
+                      <TouchableOpacity
+                        key={tag}
+                        onPress={() => setFormData({ ...formData, tag })}
+                        style={[
+                          styles.tagOption,
+                          { backgroundColor: isSelected ? t.fg : t.bg },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.tagOptionText,
+                            { color: isSelected ? "#fff" : t.fg },
+                          ]}
+                        >
+                          {tag}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  }
+                )}
               </View>
             </View>
 
@@ -424,7 +512,10 @@ export default function Calendar() {
               >
                 <Text style={styles.cancelButtonText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+              <TouchableOpacity
+                onPress={handleSubmit}
+                style={styles.submitButton}
+              >
                 <MaterialIcons name="add" size={20} color="#fff" />
                 <Text style={styles.submitButtonText}>Add Event</Text>
               </TouchableOpacity>
