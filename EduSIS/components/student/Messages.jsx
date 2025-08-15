@@ -10,6 +10,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
+  SafeAreaView,
+  StatusBar,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -164,8 +166,15 @@ export default function Messages() {
   const renderItem = ({ item }) => {
     if (item.type === "header") {
       return (
-        <View style={styles.daySeparator}>
-          <Text style={styles.daySeparatorText}>{item.label}</Text>
+        <View
+          style={[
+            styles.daySeparator,
+            { backgroundColor: colors.primary + "15" },
+          ]}
+        >
+          <Text style={[styles.daySeparatorText, { color: colors.primary }]}>
+            {item.label}
+          </Text>
         </View>
       );
     }
@@ -174,34 +183,39 @@ export default function Messages() {
     return (
       <View
         style={[
-          styles.row,
-          mine
-            ? { justifyContent: "flex-end" }
-            : { justifyContent: "flex-start" },
+          styles.messageContainer,
+          mine ? styles.sentMessage : styles.receivedMessage,
         ]}
       >
         <View
           style={[
-            styles.bubble,
-            mine ? styles.sent : styles.received,
-            { maxWidth: Math.min(0.84 * width, 420) },
+            styles.messageBubble,
+            mine ? styles.sentBubble : styles.receivedBubble,
+            {
+              backgroundColor: mine ? colors.primary : colors.card,
+              maxWidth: Math.min(0.8 * width, 300),
+              shadowColor: colors.text,
+            },
           ]}
         >
-          <View style={styles.metaRow}>
+          <View style={styles.messageHeader}>
             <Text
               style={[
-                styles.sender,
-                mine ? styles.senderMine : styles.senderOther,
+                styles.senderName,
+                { color: mine ? "rgba(255,255,255,0.8)" : colors.textDim },
               ]}
             >
               {mine
                 ? "You"
                 : item.sender_role === "teacher"
                 ? "Teacher"
-                : `Student ${item.sender_id}`}
+                : `Student ${item.sender_id.slice(-3)}`}
             </Text>
             <Text
-              style={[styles.time, mine ? styles.timeMine : styles.timeOther]}
+              style={[
+                styles.messageTime,
+                { color: mine ? "rgba(255,255,255,0.7)" : colors.textDim },
+              ]}
             >
               {new Date(item.timestamp).toLocaleTimeString([], {
                 hour: "2-digit",
@@ -209,7 +223,12 @@ export default function Messages() {
               })}
             </Text>
           </View>
-          <Text style={[styles.content, !mine && styles.contentOther]}>
+          <Text
+            style={[
+              styles.messageContent,
+              { color: mine ? "#fff" : colors.text },
+            ]}
+          >
             {item.content}
           </Text>
         </View>
@@ -218,253 +237,398 @@ export default function Messages() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: colors.bg }]}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={insets.top + 92}
-    >
-      {/* Top controls */}
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.bg }]}>
+      <StatusBar barStyle={colors.isDark ? "light-content" : "dark-content"} />
+
+      {/* Modern Header with Course Selection */}
       <View
         style={[
-          styles.topBar,
+          styles.header,
           {
-            backgroundColor: colors.cardBg,
+            backgroundColor: colors.card,
             borderBottomColor: colors.border,
           },
         ]}
       >
-        <View style={styles.dropWrap}>
-          <View
-            style={[
-              styles.pickerBox,
-              {
-                borderColor: colors.border,
-                backgroundColor: colors.inputBg,
-              },
-            ]}
-          >
-            <Picker
-              selectedValue={selectedCourseId}
-              onValueChange={(v) => setSelectedCourseId(v)}
-              dropdownIconColor={colors.primary}
-              style={[styles.picker, { color: colors.text }]}
-            >
-              {courses.map((c) => (
-                <Picker.Item
-                  key={c.course_id}
-                  label={`${c.course_id}`}
-                  value={c.course_id}
-                />
-              ))}
-            </Picker>
+        <View style={styles.headerContent}>
+          <View style={styles.headerLeft}>
+            <MaterialIcons name="chat" size={24} color={colors.primary} />
+            <Text style={[styles.headerTitle, { color: colors.text }]}>
+              Messages
+            </Text>
           </View>
-        </View>
 
-        <View style={styles.dropWrap}>
-          <View style={styles.pickerBox}>
-            <Picker
-              selectedValue={channel}
-              onValueChange={(v) => setChannel(v)}
-              dropdownIconColor={colors.primary}
-              style={styles.picker}
+          <View style={styles.headerControls}>
+            {/* Course Selector */}
+            <View
+              style={[
+                styles.selectorContainer,
+                { backgroundColor: colors.bg, borderColor: colors.border },
+              ]}
             >
-              <Picker.Item label="Group Chat" value={CHANNELS.GROUP} />
-              <Picker.Item label="Message Teacher" value={CHANNELS.TEACHER} />
-            </Picker>
+              <MaterialIcons name="school" size={20} color={colors.primary} />
+              <View style={styles.pickerWrapper}>
+                <Picker
+                  selectedValue={selectedCourseId}
+                  onValueChange={(v) => setSelectedCourseId(v)}
+                  style={[styles.picker, { color: colors.text }]}
+                  dropdownIconColor={colors.primary}
+                >
+                  {courses.map((c) => (
+                    <Picker.Item
+                      key={c.course_id}
+                      label={c.course_id}
+                      value={c.course_id}
+                    />
+                  ))}
+                </Picker>
+              </View>
+            </View>
+
+            {/* Channel Selector */}
+            <View
+              style={[
+                styles.selectorContainer,
+                { backgroundColor: colors.bg, borderColor: colors.border },
+              ]}
+            >
+              <MaterialIcons
+                name={channel === CHANNELS.TEACHER ? "person" : "group"}
+                size={18}
+                color={colors.primary}
+              />
+              <View style={styles.pickerWrapper}>
+                <Picker
+                  selectedValue={channel}
+                  onValueChange={(v) => setChannel(v)}
+                  style={[styles.picker, { color: colors.text }]}
+                  dropdownIconColor={colors.primary}
+                >
+                  <Picker.Item label="Group Chat" value={CHANNELS.GROUP} />
+                  <Picker.Item label="Teacher" value={CHANNELS.TEACHER} />
+                </Picker>
+              </View>
+            </View>
           </View>
         </View>
       </View>
 
-      {/* Chat list */}
-      <View style={styles.chatArea}>
+      {/* Chat Content */}
+      <KeyboardAvoidingView
+        style={styles.chatContainer}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+      >
         {selectedCourse ? (
-          <FlatList
-            ref={listRef}
-            data={sections}
-            keyExtractor={(it) => it.id || `${it.timestamp}`}
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={{ paddingVertical: 8, paddingBottom: 96 }}
-            onContentSizeChange={() =>
-              listRef.current?.scrollToEnd({ animated: true })
-            }
-            renderItem={renderItem}
-          />
+          <>
+            {/* Messages List */}
+            <View
+              style={[styles.messagesContainer, { backgroundColor: colors.bg }]}
+            >
+              <FlatList
+                ref={listRef}
+                data={sections}
+                keyExtractor={(it) => it.id || `${it.timestamp}`}
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={styles.messagesContent}
+                onContentSizeChange={() =>
+                  listRef.current?.scrollToEnd({ animated: true })
+                }
+                renderItem={renderItem}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
+
+            {/* Input Area */}
+            <View
+              style={[
+                styles.inputContainer,
+                {
+                  backgroundColor: colors.card,
+                  borderTopColor: colors.border,
+                  paddingBottom: Math.max(insets.bottom, 12),
+                },
+              ]}
+            >
+              <View style={styles.inputWrapper}>
+                <TouchableOpacity
+                  style={styles.attachButton}
+                  activeOpacity={0.7}
+                >
+                  <MaterialIcons
+                    name="attach-file"
+                    size={20}
+                    color={colors.textDim}
+                  />
+                </TouchableOpacity>
+
+                <TextInput
+                  style={[
+                    styles.textInput,
+                    {
+                      backgroundColor: colors.bg,
+                      borderColor: colors.border,
+                      color: colors.text,
+                    },
+                  ]}
+                  value={draft}
+                  onChangeText={setDraft}
+                  placeholder={
+                    channel === CHANNELS.TEACHER
+                      ? "Message your teacher..."
+                      : "Message the group..."
+                  }
+                  placeholderTextColor={colors.textDim}
+                  multiline
+                  maxLength={1000}
+                  returnKeyType="send"
+                  onSubmitEditing={sendMessage}
+                />
+
+                <TouchableOpacity
+                  style={[
+                    styles.sendButton,
+                    {
+                      backgroundColor: draft.trim()
+                        ? colors.primary
+                        : colors.textDim + "30",
+                    },
+                  ]}
+                  onPress={sendMessage}
+                  disabled={!draft.trim()}
+                  activeOpacity={0.8}
+                >
+                  <MaterialIcons
+                    name="send"
+                    size={18}
+                    color={draft.trim() ? "#fff" : colors.textDim}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
         ) : (
-          <View style={styles.placeholder}>
-            <MaterialIcons name="chat" size={64} color="#a3b1c2" />
-            <Text style={styles.placeholderTitle}>
-              Select a course to start
+          <View style={styles.emptyState}>
+            <View
+              style={[
+                styles.emptyStateIcon,
+                { backgroundColor: colors.primary + "15" },
+              ]}
+            >
+              <MaterialIcons name="chat" size={48} color={colors.primary} />
+            </View>
+            <Text style={[styles.emptyStateTitle, { color: colors.text }]}>
+              Welcome to Messages
             </Text>
-            <Text style={styles.placeholderSub}>
-              Then choose Teacher or Group to chat.
+            <Text style={[styles.emptyStateText, { color: colors.textDim }]}>
+              Select a course above to start chatting with your teacher or
+              classmates
             </Text>
           </View>
         )}
-      </View>
-
-      {/* Composer */}
-      <View
-        style={[
-          styles.inputRow,
-          {
-            backgroundColor: colors.bg,
-            paddingBottom: Math.max(insets.bottom, 10),
-          },
-        ]}
-      >
-        <TextInput
-          style={[
-            styles.input,
-            {
-              backgroundColor: colors.inputBg,
-              borderColor: colors.border,
-              color: colors.text,
-            },
-          ]}
-          value={draft}
-          onChangeText={setDraft}
-          placeholder={
-            channel === CHANNELS.TEACHER
-              ? "Message your teacher…"
-              : "Message the group…"
-          }
-          returnKeyType="send"
-          onSubmitEditing={sendMessage}
-          multiline
-          maxLength={1000}
-          placeholderTextColor={colors.textDim}
-        />
-        <TouchableOpacity
-          style={[
-            styles.sendBtn,
-            {
-              backgroundColor: colors.primary,
-              opacity: !draft.trim() ? 0.5 : 1,
-            },
-          ]}
-          onPress={sendMessage}
-          disabled={!draft.trim()}
-          activeOpacity={0.9}
-          accessibilityRole="button"
-          accessibilityLabel="Send message"
-        >
-          <MaterialIcons name="send" size={22} color="#fff" />
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {
+    flex: 1,
+  },
 
-  // top row with two dropdowns
-  topBar: {
-    flexDirection: "row",
-    gap: 5,
-    paddingHorizontal: 5,
-    paddingTop: 5,
-    paddingBottom: 5,
+  // Modern Header
+  header: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
     elevation: 2,
     shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
     shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
-  dropWrap: { flex: 1 },
-  dropLabel: {
-    fontSize: 12,
-    color: "#6b7c93",
-    marginBottom: 1,
-    fontWeight: "700",
-  },
-  pickerBox: {
-    height: 45,
-    borderRadius: 10,
-    borderWidth: 1,
-    overflow: "hidden",
-    justifyContent: "center",
-  },
-  picker: { width: "100%", height: 53 },
-
-  chatArea: { flex: 1, paddingHorizontal: 12, paddingTop: 8 },
-
-  daySeparator: {
-    alignSelf: "center",
-    backgroundColor: "#eaf2ff",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 999,
-    marginVertical: 8,
-  },
-  daySeparatorText: { color: "#1e4db7", fontSize: 11, fontWeight: "800" },
-
-  row: { flexDirection: "row", marginBottom: 8 },
-  bubble: {
-    borderRadius: 14,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-  },
-  sent: {
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOpacity: 0.07,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  received: {
-    borderWidth: StyleSheet.hairlineWidth,
-  },
-
-  metaRow: {
+  headerContent: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 4,
+    alignItems: "center",
   },
-  sender: { fontSize: 11, fontWeight: "800" },
-  senderMine: { color: "#ffffffcc" },
-  senderOther: { color: "#2c3e50" },
-  time: { fontSize: 10 },
-  timeMine: { color: "#ffffffaa" },
-  timeOther: { color: "#6b7280" },
-  content: { color: "#fff", fontSize: 14, lineHeight: 19 },
-  contentOther: { color: "#1f2a37" },
-
-  inputRow: {
+  headerLeft: {
     flexDirection: "row",
-    alignItems: "flex-end",
-    paddingHorizontal: 12,
-    paddingTop: 6,
+    alignItems: "center",
   },
-  input: {
-    flex: 1,
-    borderRadius: 20,
-    minHeight: 44,
-    maxHeight: 120,
-    paddingHorizontal: 14,
-    paddingTop: 10,
-    paddingBottom: 10,
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginLeft: 12,
+  },
+  headerControls: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  selectorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 12,
     borderWidth: 1,
-    fontSize: 14.5,
+    minWidth: 120,
+  },
+  pickerWrapper: {
+    flex: 1,
+    marginLeft: 8,
+  },
+  picker: {
+    height: 30,
+    fontSize: 14,
+  },
+
+  // Chat Container
+  chatContainer: {
+    flex: 1,
+  },
+  messagesContainer: {
+    flex: 1,
+  },
+  messagesContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    paddingBottom: 80,
+  },
+
+  // Day Separator
+  daySeparator: {
+    alignSelf: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 16,
+    marginVertical: 12,
+  },
+  daySeparatorText: {
+    fontSize: 12,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+
+  // Messages
+  messageContainer: {
+    marginBottom: 12,
+    flexDirection: "row",
+  },
+  sentMessage: {
+    justifyContent: "flex-end",
+  },
+  receivedMessage: {
+    justifyContent: "flex-start",
+  },
+  messageBubble: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 20,
+    elevation: 1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  sentBubble: {
+    borderBottomRightRadius: 6,
+  },
+  receivedBubble: {
+    borderBottomLeftRadius: 6,
+  },
+  messageHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 6,
+  },
+  senderName: {
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  messageTime: {
+    fontSize: 11,
+    fontWeight: "500",
+  },
+  messageContent: {
+    fontSize: 15,
     lineHeight: 20,
   },
-  sendBtn: {
-    marginLeft: 8,
+
+  // Input Area
+  inputContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+  },
+  attachButton: {
+    width: 40,
+    height: 40,
     borderRadius: 20,
-    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 8,
+    backgroundColor: "rgba(0,0,0,0.05)",
+  },
+  textInput: {
+    flex: 1,
+    marginRight: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 24,
+    borderWidth: 1,
+    fontSize: 16,
+    maxHeight: 100,
+    minHeight: 44,
+    textAlignVertical: "center",
+  },
+  sendButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
 
-  placeholder: { flex: 1, alignItems: "center", justifyContent: "center" },
-  placeholderTitle: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#2c3e50",
-    marginTop: 8,
+  // Empty State
+  emptyState: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 40,
   },
-  placeholderSub: {
-    fontSize: 13,
-    color: "#7f8c8d",
-    marginTop: 4,
+  emptyStateIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+  emptyStateTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 8,
     textAlign: "center",
+  },
+  emptyStateText: {
+    fontSize: 16,
+    textAlign: "center",
+    lineHeight: 24,
   },
 });
