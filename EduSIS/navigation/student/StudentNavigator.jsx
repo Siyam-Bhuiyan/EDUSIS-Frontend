@@ -1,5 +1,6 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { MaterialIcons } from "@expo/vector-icons";
 
 // Screens (content only; no headers inside them)
 import StudentDashboard from "../../components/student/StudentDashboard";
@@ -9,7 +10,7 @@ import Results from "../../components/student/Results";
 import Calendar from "../../components/student/Calendar";
 import Profile from "../../components/student/Profile";
 import CourseDetail from "../../components/student/CourseDetail";
-
+import AdmitCards from "../../components/student/AdmitCards";
 
 // Shared UI
 import Sidebar from "../../components/layout/Sidebar";
@@ -31,6 +32,12 @@ export default function StudentNavigator() {
     { id: 2, title: "Messages", icon: "class", screen: "Messages" },
     { id: 3, title: "Results", icon: "assessment", screen: "Results" },
     { id: 4, title: "Calendar", icon: "event", screen: "Calendar" },
+    {
+      id: 5,
+      title: "Admit Cards",
+      icon: "assignment-ind",
+      screen: "AdmitCards",
+    },
   ];
 
   const footerActions = [
@@ -76,6 +83,11 @@ export default function StudentNavigator() {
           title: "Siyam",
           subtitle: "ID: 210041215",
         })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="dashboard" size={size} color={color} />
+          ),
+        }}
       />
       <Drawer.Screen
         name="Assignments"
@@ -83,6 +95,11 @@ export default function StudentNavigator() {
           title: "Student",
           subtitle: "Assignments",
         })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="assignment" size={size} color={color} />
+          ),
+        }}
       />
       <Drawer.Screen
         name="Messages"
@@ -90,6 +107,11 @@ export default function StudentNavigator() {
           title: "Student",
           subtitle: "Messages",
         })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="message" size={size} color={color} />
+          ),
+        }}
       />
       <Drawer.Screen
         name="Results"
@@ -97,6 +119,11 @@ export default function StudentNavigator() {
           title: "Student",
           subtitle: "Results",
         })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="assessment" size={size} color={color} />
+          ),
+        }}
       />
       <Drawer.Screen
         name="Calendar"
@@ -104,6 +131,11 @@ export default function StudentNavigator() {
           title: "Student",
           subtitle: "Calendar",
         })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="event" size={size} color={color} />
+          ),
+        }}
       />
       <Drawer.Screen
         name="Profile"
@@ -111,13 +143,35 @@ export default function StudentNavigator() {
           title: "Student",
           subtitle: "Profile",
         })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="person" size={size} color={color} />
+          ),
+        }}
       />
       <Drawer.Screen
         name="CourseDetail"
         component={withShell(CourseDetail, {
           title: "Course Details",
-          subtitle: "Course Materials & Activities"
+          subtitle: "Course Materials & Activities",
         })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="menu-book" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="AdmitCards"
+        component={withShell(AdmitCards, {
+          title: "Admit Cards",
+          subtitle: "Download Exam Admit Cards",
+        })}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="assignment-ind" size={size} color={color} />
+          ),
+        }}
       />
     </Drawer.Navigator>
   );
