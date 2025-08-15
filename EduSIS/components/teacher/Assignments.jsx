@@ -47,7 +47,12 @@ export default function Assignments() {
   ]);
 
   const handleSubmit = () => {
-    if (!title.trim() || !description.trim() || !dueDate.trim() || !points.trim()) {
+    if (
+      !title.trim() ||
+      !description.trim() ||
+      !dueDate.trim() ||
+      !points.trim()
+    ) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
@@ -98,97 +103,184 @@ export default function Assignments() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
-      {/* Add Button */}
-      <TouchableOpacity
-        style={[styles.addButton, { backgroundColor: colors.primary }]}
-        onPress={() => setShowForm(true)}
-      >
-        <MaterialIcons name="assignment" size={24} color="#fff" />
-        <Text style={styles.addButtonText}>Create Assignment</Text>
-      </TouchableOpacity>
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>
+            Assignments
+          </Text>
+          <Text style={[styles.headerSubtitle, { color: colors.textDim }]}>
+            Create and manage student assignments
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={[styles.createButton, { backgroundColor: colors.primary }]}
+          onPress={() => setShowForm(true)}
+        >
+          <MaterialIcons name="add" size={20} color="#fff" />
+          <Text style={styles.createButtonText}>New Assignment</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Assignments List */}
-      <ScrollView style={styles.list}>
-        {assignments.map((assignment) => (
-          <View
-            key={assignment.id}
-            style={[styles.card, { backgroundColor: colors.cardBg }]}
-          >
-            <View style={styles.cardHeader}>
-              <View style={styles.courseChip}>
-                <MaterialIcons name="class" size={16} color={colors.primary} />
-                <Text
-                  style={[styles.courseText, { color: colors.primary }]}
+      <ScrollView
+        style={styles.list}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {assignments.length === 0 ? (
+          <View style={styles.emptyState}>
+            <MaterialIcons name="assignment" size={64} color={colors.textDim} />
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>
+              No Assignments Created
+            </Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textDim }]}>
+              Create your first assignment to get started
+            </Text>
+          </View>
+        ) : (
+          assignments.map((assignment) => (
+            <View
+              key={assignment.id}
+              style={[
+                styles.assignmentCard,
+                { backgroundColor: colors.cardBg },
+              ]}
+            >
+              <View style={styles.cardHeader}>
+                <View style={styles.assignmentInfo}>
+                  <View
+                    style={[
+                      styles.courseBadge,
+                      { backgroundColor: colors.primary + "15" },
+                    ]}
+                  >
+                    <Text
+                      style={[styles.courseCode, { color: colors.primary }]}
+                    >
+                      {assignment.course}
+                    </Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.statusBadge,
+                      {
+                        backgroundColor:
+                          assignment.status === "active"
+                            ? "#fef3c7"
+                            : "#dcfce7",
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.statusText,
+                        {
+                          color:
+                            assignment.status === "active"
+                              ? "#d97706"
+                              : "#16a34a",
+                        },
+                      ]}
+                    >
+                      {assignment.status}
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  onPress={() => deleteAssignment(assignment.id)}
+                  style={styles.deleteButton}
                 >
-                  {assignment.course}
-                </Text>
+                  <MaterialIcons
+                    name="delete-outline"
+                    size={18}
+                    color="#ef4444"
+                  />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                onPress={() => deleteAssignment(assignment.id)}
-                style={styles.deleteBtn}
+
+              <Text
+                style={[styles.assignmentTitle, { color: colors.text }]}
+                numberOfLines={2}
               >
-                <MaterialIcons
-                  name="delete-outline"
-                  size={20}
-                  color={colors.danger}
-                />
+                {assignment.title}
+              </Text>
+
+              <Text
+                style={[styles.description, { color: colors.textDim }]}
+                numberOfLines={2}
+              >
+                {assignment.description}
+              </Text>
+
+              <View style={styles.assignmentDetails}>
+                <View style={styles.detailItem}>
+                  <View style={styles.detailIcon}>
+                    <MaterialIcons name="schedule" size={16} color="#6b7280" />
+                  </View>
+                  <Text style={[styles.detailText, { color: colors.textDim }]}>
+                    Due {assignment.dueDate}
+                  </Text>
+                </View>
+                <View style={styles.detailItem}>
+                  <View style={styles.detailIcon}>
+                    <MaterialIcons name="stars" size={16} color="#6b7280" />
+                  </View>
+                  <Text style={[styles.detailText, { color: colors.textDim }]}>
+                    {assignment.points} points
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.progressSection}>
+                <View style={styles.progressInfo}>
+                  <Text
+                    style={[styles.progressLabel, { color: colors.textDim }]}
+                  >
+                    Submissions
+                  </Text>
+                  <Text style={[styles.progressCount, { color: colors.text }]}>
+                    {assignment.submissionsCount}/{assignment.totalStudents}
+                  </Text>
+                </View>
+                <View style={styles.progressBarContainer}>
+                  <View
+                    style={[
+                      styles.progressBar,
+                      { backgroundColor: colors.inputBg },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.progressFill,
+                        {
+                          backgroundColor: colors.primary,
+                          width: `${
+                            (assignment.submissionsCount /
+                              assignment.totalStudents) *
+                            100
+                          }%`,
+                        },
+                      ]}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              <TouchableOpacity
+                style={[styles.viewButton, { backgroundColor: colors.primary }]}
+                onPress={() => viewSubmissions(assignment)}
+              >
+                <MaterialIcons name="visibility" size={18} color="#fff" />
+                <Text style={styles.viewButtonText}>
+                  {assignment.status === "graded"
+                    ? "View Grades"
+                    : "View Submissions"}
+                </Text>
               </TouchableOpacity>
             </View>
-
-            <Text style={[styles.assignmentTitle, { color: colors.text }]}>
-              {assignment.title}
-            </Text>
-
-            <Text style={[styles.description, { color: colors.textDim }]}>
-              {assignment.description}
-            </Text>
-
-            <View style={styles.detailsRow}>
-              <View style={styles.detail}>
-                <MaterialIcons
-                  name="event"
-                  size={16}
-                  color={colors.textDim}
-                />
-                <Text style={[styles.detailText, { color: colors.textDim }]}>
-                  Due: {assignment.dueDate}
-                </Text>
-              </View>
-              <View style={styles.detail}>
-                <MaterialIcons
-                  name="star"
-                  size={16}
-                  color={colors.textDim}
-                />
-                <Text style={[styles.detailText, { color: colors.textDim }]}>
-                  {assignment.points} points
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.progressBar}>
-              <View
-                style={[
-                  styles.progressFill,
-                  {
-                    backgroundColor: colors.primary,
-                    width: `${(assignment.submissionsCount / assignment.totalStudents) * 100}%`,
-                  },
-                ]}
-              />
-            </View>
-
-            <TouchableOpacity
-              style={[styles.viewButton, { backgroundColor: colors.primary }]}
-              onPress={() => viewSubmissions(assignment)}
-            >
-              <MaterialIcons name="assignment-turned-in" size={20} color="#fff" />
-              <Text style={styles.viewButtonText}>
-                {assignment.status === "graded" ? "View Grades" : "View Submissions"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ))}
+          ))
+        )}
       </ScrollView>
 
       {/* Create Assignment Modal */}
@@ -198,59 +290,117 @@ export default function Assignments() {
             style={[styles.modalContent, { backgroundColor: colors.cardBg }]}
           >
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>
-                Create New Assignment
-              </Text>
-              <TouchableOpacity onPress={() => setShowForm(false)}>
-                <MaterialIcons
-                  name="close"
-                  size={24}
-                  color={colors.textDim}
-                />
+              <View>
+                <Text style={[styles.modalTitle, { color: colors.text }]}>
+                  Create Assignment
+                </Text>
+                <Text style={[styles.modalSubtitle, { color: colors.textDim }]}>
+                  Add a new assignment for students
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setShowForm(false)}
+                style={styles.closeButton}
+              >
+                <MaterialIcons name="close" size={20} color={colors.textDim} />
               </TouchableOpacity>
             </View>
 
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
-              placeholder="Assignment Title"
-              placeholderTextColor={colors.textDim}
-              value={title}
-              onChangeText={setTitle}
-            />
+            <View style={styles.formContainer}>
+              <View style={styles.inputGroup}>
+                <Text style={[styles.inputLabel, { color: colors.text }]}>
+                  Title
+                </Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    { backgroundColor: colors.inputBg, color: colors.text },
+                  ]}
+                  placeholder="Enter assignment title"
+                  placeholderTextColor={colors.textDim}
+                  value={title}
+                  onChangeText={setTitle}
+                />
+              </View>
 
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
-              placeholder="Description"
-              placeholderTextColor={colors.textDim}
-              value={description}
-              onChangeText={setDescription}
-              multiline
-              numberOfLines={3}
-            />
+              <View style={styles.inputGroup}>
+                <Text style={[styles.inputLabel, { color: colors.text }]}>
+                  Description
+                </Text>
+                <TextInput
+                  style={[
+                    styles.textArea,
+                    { backgroundColor: colors.inputBg, color: colors.text },
+                  ]}
+                  placeholder="Enter assignment description"
+                  placeholderTextColor={colors.textDim}
+                  value={description}
+                  onChangeText={setDescription}
+                  multiline
+                  numberOfLines={3}
+                />
+              </View>
 
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
-              placeholder="Due Date (YYYY-MM-DD)"
-              placeholderTextColor={colors.textDim}
-              value={dueDate}
-              onChangeText={setDueDate}
-            />
+              <View style={styles.inputRow}>
+                <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
+                  <Text style={[styles.inputLabel, { color: colors.text }]}>
+                    Due Date
+                  </Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      { backgroundColor: colors.inputBg, color: colors.text },
+                    ]}
+                    placeholder="YYYY-MM-DD"
+                    placeholderTextColor={colors.textDim}
+                    value={dueDate}
+                    onChangeText={setDueDate}
+                  />
+                </View>
+                <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
+                  <Text style={[styles.inputLabel, { color: colors.text }]}>
+                    Points
+                  </Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      { backgroundColor: colors.inputBg, color: colors.text },
+                    ]}
+                    placeholder="100"
+                    placeholderTextColor={colors.textDim}
+                    value={points}
+                    onChangeText={setPoints}
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
+            </View>
 
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
-              placeholder="Points"
-              placeholderTextColor={colors.textDim}
-              value={points}
-              onChangeText={setPoints}
-              keyboardType="numeric"
-            />
-
-            <TouchableOpacity
-              style={[styles.submitButton, { backgroundColor: colors.primary }]}
-              onPress={handleSubmit}
-            >
-              <Text style={styles.submitButtonText}>Create Assignment</Text>
-            </TouchableOpacity>
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[
+                  styles.cancelButton,
+                  { backgroundColor: colors.inputBg },
+                ]}
+                onPress={() => setShowForm(false)}
+              >
+                <Text
+                  style={[styles.cancelButtonText, { color: colors.textDim }]}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.submitButton,
+                  { backgroundColor: colors.primary },
+                ]}
+                onPress={handleSubmit}
+              >
+                <MaterialIcons name="assignment" size={18} color="#fff" />
+                <Text style={styles.submitButtonText}>Create Assignment</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -261,139 +411,348 @@ export default function Assignments() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    backgroundColor: "#f8fafc",
   },
-  addButton: {
+
+  // Header Styles
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+    paddingTop: 12,
+  },
+  headerContent: {
+    flex: 1,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    marginBottom: 4,
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    fontWeight: "400",
+  },
+  createButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1e90ff",
-    paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 8,
-    marginBottom: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
-  addButtonText: {
+  createButtonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "600",
-    marginLeft: 8,
+    marginLeft: 6,
   },
+
+  // Stats Styles
+  statsContainer: {
+    flexDirection: "row",
+    paddingHorizontal: 16,
+    marginBottom: 20,
+  },
+  statCard: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+    padding: 16,
+    borderRadius: 12,
+    marginHorizontal: 4,
+    elevation: 1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+  },
+  statIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: "#dbeafe",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  statContent: {
+    flex: 1,
+  },
+  statNumber: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 2,
+  },
+  statLabel: {
+    fontSize: 12,
+    fontWeight: "500",
+  },
+
+  // List Styles
   list: {
     flex: 1,
   },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
+  listContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 20,
+  },
+
+  // Empty State
+  emptyState: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 60,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    textAlign: "center",
+    lineHeight: 20,
+    paddingHorizontal: 20,
+  },
+
+  // Assignment Card Styles
+  assignmentCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 16,
     padding: 16,
-    marginBottom: 12,
+    marginBottom: 16,
     elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    borderWidth: 1,
+    borderColor: "#f1f5f9",
   },
   cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginBottom: 12,
   },
-  courseChip: {
+  assignmentInfo: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
-    backgroundColor: "#e8f4ff",
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 6,
+    flex: 1,
   },
-  courseText: {
+  courseBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    marginRight: 8,
+  },
+  courseCode: {
     fontSize: 12,
     fontWeight: "600",
   },
-  deleteBtn: {
-    padding: 4,
+  statusBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  statusText: {
+    fontSize: 11,
+    fontWeight: "600",
+    textTransform: "capitalize",
+  },
+  deleteButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: "#fef2f2",
   },
   assignmentTitle: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: 18,
+    fontWeight: "600",
     marginBottom: 8,
+    lineHeight: 24,
   },
   description: {
     fontSize: 14,
-    marginBottom: 12,
+    lineHeight: 20,
+    marginBottom: 16,
   },
-  detailsRow: {
-    flexDirection: "row",
-    gap: 16,
-    marginBottom: 12,
+  assignmentDetails: {
+    marginBottom: 16,
   },
-  detail: {
+  detailItem: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    marginBottom: 8,
+  },
+  detailIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    backgroundColor: "#f8fafc",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
   },
   detailText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  progressSection: {
+    marginBottom: 16,
+  },
+  progressInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  progressLabel: {
     fontSize: 13,
+    fontWeight: "500",
+  },
+  progressCount: {
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  progressBarContainer: {
+    width: "100%",
   },
   progressBar: {
-    height: 4,
-    backgroundColor: "#eee",
-    borderRadius: 2,
-    marginBottom: 12,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "#f3f4f6",
   },
   progressFill: {
     height: "100%",
-    borderRadius: 2,
+    borderRadius: 3,
   },
   viewButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 6,
-    backgroundColor: "#1e90ff",
-    paddingVertical: 8,
-    borderRadius: 6,
+    paddingVertical: 12,
+    borderRadius: 12,
+    elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   viewButtonText: {
     color: "#fff",
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "600",
+    marginLeft: 8,
   },
+
+  // Modal Styles
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
-    padding: 20,
+    alignItems: "center",
+    paddingHorizontal: 16,
   },
   modalContent: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 20,
+    width: "100%",
+    maxWidth: 400,
+    borderRadius: 20,
+    padding: 24,
+    elevation: 10,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
   },
   modalHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
+    alignItems: "flex-start",
+    marginBottom: 24,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "700",
+    marginBottom: 4,
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    fontWeight: "400",
+  },
+  closeButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: "#f1f5f9",
+  },
+  formContainer: {
+    marginBottom: 24,
+  },
+  inputGroup: {
+    marginBottom: 16,
+  },
+  inputRow: {
+    flexDirection: "row",
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 8,
   },
   input: {
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 15,
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    fontSize: 16,
+    borderColor: "#e2e8f0",
+  },
+  textArea: {
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 15,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    minHeight: 80,
+    textAlignVertical: "top",
+  },
+  modalActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  cancelButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: "center",
+    marginRight: 8,
+  },
+  cancelButtonText: {
+    fontSize: 15,
+    fontWeight: "600",
   },
   submitButton: {
-    backgroundColor: "#1e90ff",
-    padding: 16,
-    borderRadius: 8,
+    flex: 2,
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginLeft: 8,
+    elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   submitButtonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "600",
+    marginLeft: 8,
   },
 });
