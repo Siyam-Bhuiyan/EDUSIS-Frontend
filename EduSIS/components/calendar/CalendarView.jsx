@@ -173,7 +173,7 @@ export default function CalendarView({
       {/* Weekday Headers */}
       <View style={styles.weekdayContainer}>
         {weekdays.map((day, index) => (
-          <View key={day} style={styles.weekdayHeader}>
+          <View key={`weekday-${index}`} style={styles.weekdayHeader}>
             <Text
               style={[
                 styles.weekdayText,

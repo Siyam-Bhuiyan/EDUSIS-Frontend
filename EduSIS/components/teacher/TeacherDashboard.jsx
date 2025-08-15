@@ -18,7 +18,7 @@ export default function TeacherDashboard() {
       section: "Section 1 & 2",
       students: 45,
       coverUri: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1400&q=60",
-      teacherAvatarUri: "https://cse.iutoic-dhaka.edu/uploads/img/1624511577_1067.jpg",
+      teacherAvatarUri: "https://cse.iutoic-dhaka.edu/uploads/img/1601107075_1082.jpg",
     },
     {
       id: "CSE-205",
@@ -34,7 +34,7 @@ export default function TeacherDashboard() {
       section: "Section 1 & 2",
       students: 38,
       coverUri: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1400&q=60",
-      teacherAvatarUri: "https://cse.iutoic-dhaka.edu/uploads/img/1601106855_1128.jpg",
+      teacherAvatarUri: "https://cse.iutoic-dhaka.edu/uploads/img/1601107075_1082.jpg",
     },
   ];
 

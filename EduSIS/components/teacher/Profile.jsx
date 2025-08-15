@@ -15,10 +15,10 @@ export default function Profile() {
 
   // Demo data
   const teacher = {
-    name: "Dr. Smith",
+    name: "MD. Ridwan Kabir",
     department: "Computer Science & Engineering",
     designation: "Associate Professor",
-    email: "smith@university.edu",
+    email: "ridwan.kabir@iut.edu",
     phone: "+1 234 567 8900",
     office: "Room 405, CSE Building",
     avatar: require("../../assets/profile.jpg"),
@@ -60,7 +60,7 @@ export default function Profile() {
     >
       {/* Profile Header */}
       <View style={[styles.header, { backgroundColor: colors.cardBg }]}>
-        <Image source={teacher.avatar} style={styles.avatar} />
+        <Image source={{ uri: "https://cse.iutoic-dhaka.edu/uploads/img/1601107075_1082.jpg" }} style={styles.avatar} />
         <Text style={[styles.name, { color: colors.text }]}>{teacher.name}</Text>
         <Text style={[styles.department, { color: colors.textDim }]}>
           {teacher.department}
@@ -116,20 +116,6 @@ export default function Profile() {
         ))}
       </View>
 
-      {/* Theme Toggle */}
-      <TouchableOpacity
-        onPress={toggle}
-        style={[styles.themeToggle, { backgroundColor: colors.cardBg }]}
-      >
-        <MaterialIcons
-          name={isDark ? "light-mode" : "dark-mode"}
-          size={24}
-          color={colors.primary}
-        />
-        <Text style={[styles.themeToggleText, { color: colors.text }]}>
-          {isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-        </Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 }
